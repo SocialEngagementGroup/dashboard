@@ -19,9 +19,10 @@ import Link from "next/link"
 type EmployeeFormProps = {
     employee?: User
     managers: User[]
+    onSuccess?: () => void
 }
 
-export function EmployeeForm({ employee, managers }: EmployeeFormProps) {
+export function EmployeeForm({ employee, managers, onSuccess }: EmployeeFormProps) {
     const initialState: EmployeeFormState = { message: undefined, errors: {} }
     const [state, dispatch, isPending] = useActionState(
         employee ? updateEmployee.bind(null, employee.id) : createEmployee,
@@ -32,7 +33,7 @@ export function EmployeeForm({ employee, managers }: EmployeeFormProps) {
         <form action={dispatch} className="space-y-6 max-w-2xl">
             <div className="space-y-6">
                 <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Personal Information</h3>
+                    <h3 className="text-lg font-medium">Employee Details</h3>
                     <div className="space-y-4">
                         <div className="space-y-2">
                             <Label htmlFor="name">Full Name</Label>
@@ -94,176 +95,49 @@ export function EmployeeForm({ employee, managers }: EmployeeFormProps) {
                             </div>
                         </div>
 
-                        <div className="grid gap-4 md:grid-cols-2">
-                            <div className="space-y-2">
-                                <Label htmlFor="dob">Date of Birth</Label>
-                                <Input
-                                    id="dob"
-                                    name="dob"
-                                    type="date"
-                                    defaultValue={employee?.dob ? new Date(employee.dob).toISOString().split('T')[0] : ""}
-                                />
+                        <div className="space-y-4 pt-4 border-t">
+                            <h3 className="text-lg font-medium">Professional Details</h3>
+                            <div className="grid gap-4 md:grid-cols-2">
+                                <div className="space-y-2">
+                                    <Label htmlFor="designation">Designation</Label>
+                                    <Input
+                                        id="designation"
+                                        name="designation"
+                                        defaultValue={employee?.designation || ""}
+                                        placeholder="Software Engineer"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="department">Department</Label>
+                                    <Input
+                                        id="department"
+                                        name="department"
+                                        defaultValue={employee?.department || ""}
+                                        placeholder="Engineering"
+                                    />
+                                </div>
                             </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="bloodGroup">Blood Group</Label>
-                                <Select name="bloodGroup" defaultValue={employee?.bloodGroup || ""}>
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Select blood group" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="A+">A+</SelectItem>
-                                        <SelectItem value="A-">A-</SelectItem>
-                                        <SelectItem value="B+">B+</SelectItem>
-                                        <SelectItem value="B-">B-</SelectItem>
-                                        <SelectItem value="AB+">AB+</SelectItem>
-                                        <SelectItem value="AB-">AB-</SelectItem>
-                                        <SelectItem value="O+">O+</SelectItem>
-                                        <SelectItem value="O-">O-</SelectItem>
-                                    </SelectContent>
-                                </Select>
+
+                            <div className="grid gap-4 md:grid-cols-2">
+                                <div className="space-y-2">
+                                    <Label htmlFor="employeeId">Employee ID</Label>
+                                    <Input
+                                        id="employeeId"
+                                        name="employeeId"
+                                        defaultValue={employee?.employeeId || ""}
+                                        placeholder="EMP-001"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="joiningDate">Joining Date</Label>
+                                    <Input
+                                        id="joiningDate"
+                                        name="joiningDate"
+                                        type="date"
+                                        defaultValue={employee?.joiningDate ? new Date(employee.joiningDate).toISOString().split('T')[0] : ""}
+                                    />
+                                </div>
                             </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="nationalId">National ID</Label>
-                            <Input
-                                id="nationalId"
-                                name="nationalId"
-                                defaultValue={employee?.nationalId || ""}
-                                placeholder="National ID Number"
-                            />
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="image">Profile Image</Label>
-                            <Input
-                                id="image"
-                                name="image"
-                                type="file"
-                                accept="image/*"
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Contact Details</h3>
-                    <div className="space-y-4">
-                        <div className="grid gap-4 md:grid-cols-2">
-                            <div className="space-y-2">
-                                <Label htmlFor="phone">Phone Number</Label>
-                                <Input
-                                    id="phone"
-                                    name="phone"
-                                    defaultValue={employee?.phone || ""}
-                                    placeholder="+1 234 567 890"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="personalEmail">Personal Email</Label>
-                                <Input
-                                    id="personalEmail"
-                                    name="personalEmail"
-                                    type="email"
-                                    defaultValue={employee?.personalEmail || ""}
-                                    placeholder="john@gmail.com"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="address">Address</Label>
-                            <Input
-                                id="address"
-                                name="address"
-                                defaultValue={employee?.address || ""}
-                                placeholder="123 Main St, City, Country"
-                            />
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="emergencyContact">Emergency Contact</Label>
-                            <Input
-                                id="emergencyContact"
-                                name="emergencyContact"
-                                defaultValue={employee?.emergencyContact || ""}
-                                placeholder="Jane Doe: +1 987 654 321"
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Banking Information</h3>
-                    <div className="space-y-4">
-                        <div className="grid gap-4 md:grid-cols-2">
-                            <div className="space-y-2">
-                                <Label htmlFor="bankName">Bank Name</Label>
-                                <Input
-                                    id="bankName"
-                                    name="bankName"
-                                    defaultValue={employee?.bankName || ""}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="branchName">Branch Name</Label>
-                                <Input
-                                    id="branchName"
-                                    name="branchName"
-                                    defaultValue={employee?.branchName || ""}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="bankAccountName">Account Holder Name</Label>
-                            <Input
-                                id="bankAccountName"
-                                name="bankAccountName"
-                                defaultValue={employee?.bankAccountName || ""}
-                            />
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="accountNumber">Account Number</Label>
-                            <Input
-                                id="accountNumber"
-                                name="accountNumber"
-                                defaultValue={employee?.accountNumber || ""}
-                            />
-                        </div>
-
-                        <div className="grid gap-4 md:grid-cols-2">
-                            <div className="space-y-2">
-                                <Label htmlFor="routingNumber">Routing Number</Label>
-                                <Input
-                                    id="routingNumber"
-                                    name="routingNumber"
-                                    defaultValue={employee?.routingNumber || ""}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="swiftCode">SWIFT Code</Label>
-                                <Input
-                                    id="swiftCode"
-                                    name="swiftCode"
-                                    defaultValue={employee?.swiftCode || ""}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label htmlFor="accountType">Account Type</Label>
-                            <Select name="accountType" defaultValue={employee?.accountType || ""}>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Select account type" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="SAVINGS">Savings</SelectItem>
-                                    <SelectItem value="CURRENT">Current</SelectItem>
-                                    <SelectItem value="SALARY">Salary</SelectItem>
-                                </SelectContent>
-                            </Select>
                         </div>
                     </div>
                 </div>
@@ -274,9 +148,11 @@ export function EmployeeForm({ employee, managers }: EmployeeFormProps) {
             )}
 
             <div className="flex justify-end gap-2">
-                <Link href="/admin/employees">
-                    <Button type="button" variant="outline">Cancel</Button>
-                </Link>
+                {!onSuccess && (
+                    <Link href="/admin/employees">
+                        <Button type="button" variant="outline">Cancel</Button>
+                    </Link>
+                )}
                 <Button type="submit" disabled={isPending}>
                     {isPending && <span className="mr-2">⏳</span>}
                     {employee ? "Save Changes" : "Create Employee"}

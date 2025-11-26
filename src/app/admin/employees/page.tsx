@@ -9,7 +9,8 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { Plus } from "lucide-react"
+import { AddEmployeeModal } from "@/components/admin/add-employee-modal"
+import { Eye } from "lucide-react"
 
 export const dynamic = 'force-dynamic'
 
@@ -19,16 +20,16 @@ export default async function EmployeesPage() {
         include: { manager: true }
     })
 
+    const managers = await prisma.user.findMany({
+        where: { role: 'ADMIN' },
+        orderBy: { name: 'asc' }
+    })
+
     return (
         <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold">Employees</h1>
-                <Button asChild>
-                    <Link href="/admin/employees/new">
-                        <Plus className="mr-2 h-4 w-4" />
-                        Add Employee
-                    </Link>
-                </Button>
+                <AddEmployeeModal managers={managers} />
             </div>
 
             <div className="rounded-md border bg-white dark:bg-gray-900">
@@ -50,9 +51,16 @@ export default async function EmployeesPage() {
                                 <TableCell>{employee.role}</TableCell>
                                 <TableCell>{employee.manager?.name || '-'}</TableCell>
                                 <TableCell className="text-right">
-                                    <Button variant="ghost" size="sm" asChild>
-                                        <Link href={`/admin/employees/${employee.id}`}>Edit</Link>
-                                    </Button>
+                                    <div className="flex justify-end gap-2">
+                                        <Button variant="ghost" size="sm" asChild>
+                                            <Link href={`/admin/employees/${employee.id}/view`}>
+                                                <Eye className="h-4 w-4" />
+                                            </Link>
+                                        </Button>
+                                        <Button variant="ghost" size="sm" asChild>
+                                            <Link href={`/admin/employees/${employee.id}`}>Edit</Link>
+                                        </Button>
+                                    </div>
                                 </TableCell>
                             </TableRow>
                         ))}
