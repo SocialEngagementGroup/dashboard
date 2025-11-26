@@ -8,7 +8,9 @@ import {
     LayoutDashboard,
     User,
     Calendar,
-    FileText,
+    Banknote,
+    TrendingUp,
+    BookOpen,
     LogOut
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -20,19 +22,24 @@ const sidebarItems = [
         icon: LayoutDashboard,
     },
     {
-        title: "My Profile",
-        href: "/dashboard/profile",
-        icon: User,
-    },
-    {
         title: "Leave",
         href: "/dashboard/leave",
         icon: Calendar,
     },
     {
-        title: "Documents",
-        href: "/dashboard/documents",
-        icon: FileText,
+        title: "Salary",
+        href: "/dashboard/salary",
+        icon: Banknote,
+    },
+    {
+        title: "Performance",
+        href: "/dashboard/performance",
+        icon: TrendingUp,
+    },
+    {
+        title: "Resources",
+        href: "/dashboard/resources",
+        icon: BookOpen,
     },
 ]
 
@@ -44,40 +51,55 @@ export function EmployeeSidebar() {
     }
 
     return (
-        <div className="flex h-full w-64 flex-col border-r bg-gray-50/40 dark:bg-gray-800/40">
-            <div className="flex h-14 items-center border-b px-6">
-                <Link className="flex items-center gap-2 font-semibold" href="/dashboard">
+        <div className="flex h-full w-64 flex-col border-r" style={{ backgroundColor: '#5c3333ff' }}>
+            <div className="flex h-14 items-center border-b border-white/20 px-6">
+                <Link className="flex items-center gap-2 font-semibold text-white" href="/dashboard">
                     <span className="">Employee Portal</span>
                 </Link>
             </div>
             <div className="flex-1 overflow-auto py-2">
-                <nav className="grid items-start px-4 text-sm font-medium">
+                <nav className="grid items-start px-4 text-base font-medium">
                     {sidebarItems.map((item) => (
                         <Link
                             key={item.href}
                             href={item.href}
                             className={cn(
-                                "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-gray-900 dark:hover:text-gray-50",
+                                "flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ease-in-out hover:text-white hover:bg-white/15",
                                 pathname === item.href
-                                    ? "bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-50"
-                                    : "text-gray-500 dark:text-gray-400"
+                                    ? "bg-white/20 text-white shadow-sm"
+                                    : "text-white/70"
                             )}
                         >
-                            <item.icon className="h-4 w-4" />
+                            <item.icon className="h-5 w-5" />
                             {item.title}
                         </Link>
                     ))}
                 </nav>
             </div>
             <div className="mt-auto p-4">
-                <Button
-                    onClick={handleSignOut}
-                    variant="ghost"
-                    className="w-full justify-start text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                >
-                    <LogOut className="mr-3 h-4 w-4" />
-                    Sign Out
-                </Button>
+                <div className="flex items-center gap-2">
+                    <Link
+                        href="/dashboard/profile"
+                        className={cn(
+                            "flex-1 flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ease-in-out hover:text-white hover:bg-white/15",
+                            pathname === "/dashboard/profile"
+                                ? "bg-white/20 text-white shadow-sm"
+                                : "text-white/70"
+                        )}
+                    >
+                        <User className="h-5 w-5" />
+                        <span className="text-base font-medium">My Profile</span>
+                    </Link>
+                    <Button
+                        onClick={handleSignOut}
+                        variant="ghost"
+                        size="icon"
+                        className="text-white/70 hover:text-white hover:bg-white/15 rounded-lg shrink-0"
+                    >
+                        <LogOut className="h-5 w-5" />
+                        <span className="sr-only">Sign Out</span>
+                    </Button>
+                </div>
             </div>
         </div>
     )

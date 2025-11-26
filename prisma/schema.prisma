@@ -19,12 +19,19 @@ model User {
   phone            String?
   address          String?
   emergencyContact String?
+  personalEmail    String?
+  dob              DateTime?
+  bloodGroup       String?
+  nationalId       String?
   
   // Banking Details
-  bankName      String?
-  accountNumber String?
-  routingNumber String?
-  swiftCode     String?
+  bankName        String?
+  bankAccountName String?
+  accountNumber   String?
+  accountType     String?
+  branchName      String?
+  routingNumber   String?
+  swiftCode       String?
 
   // Relations
   accounts      Account[]

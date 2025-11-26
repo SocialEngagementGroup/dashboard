@@ -11,10 +11,10 @@ export default function EmployeeLayout({
                 <EmployeeSidebar />
             </div>
             <div className="flex flex-1 flex-col overflow-hidden">
-                <header className="flex h-14 items-center gap-4 border-b bg-gray-50/40 px-6 dark:bg-gray-800/40 md:hidden">
-                    <span className="font-semibold">Employee Portal</span>
+                <header className="flex h-14 items-center gap-4 border-b border-white/20 px-6 md:hidden" style={{ backgroundColor: '#5c3333ff' }}>
+                    <span className="font-semibold text-white">Employee Portal</span>
                 </header>
-                <main className="flex-1 overflow-auto p-6">
+                <main className="flex-1 overflow-auto p-6 bg-gradient-to-br from-gray-50 via-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
                     {children}
                 </main>
             </div>

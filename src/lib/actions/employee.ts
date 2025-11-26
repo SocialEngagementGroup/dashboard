@@ -3,6 +3,8 @@
 import { prisma } from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
+import { writeFile } from "fs/promises"
+import { join } from "path"
 import { z } from "zod"
 
 const EmployeeSchema = z.object({
@@ -13,8 +15,15 @@ const EmployeeSchema = z.object({
     phone: z.string().optional(),
     address: z.string().optional(),
     emergencyContact: z.string().optional(),
+    personalEmail: z.string().email("Invalid personal email").optional().or(z.literal("")),
+    dob: z.string().optional(),
+    bloodGroup: z.string().optional(),
+    nationalId: z.string().optional(),
     bankName: z.string().optional(),
+    bankAccountName: z.string().optional(),
     accountNumber: z.string().optional(),
+    accountType: z.string().optional(),
+    branchName: z.string().optional(),
     routingNumber: z.string().optional(),
     swiftCode: z.string().optional(),
 })
@@ -35,8 +44,15 @@ export async function createEmployee(prevState: EmployeeFormState, formData: For
         phone: formData.get("phone"),
         address: formData.get("address"),
         emergencyContact: formData.get("emergencyContact"),
+        personalEmail: formData.get("personalEmail"),
+        dob: formData.get("dob"),
+        bloodGroup: formData.get("bloodGroup"),
+        nationalId: formData.get("nationalId"),
         bankName: formData.get("bankName"),
+        bankAccountName: formData.get("bankAccountName"),
         accountNumber: formData.get("accountNumber"),
+        accountType: formData.get("accountType"),
+        branchName: formData.get("branchName"),
         routingNumber: formData.get("routingNumber"),
         swiftCode: formData.get("swiftCode"),
     })
@@ -60,9 +76,30 @@ export async function createEmployee(prevState: EmployeeFormState, formData: For
         }
     }
 
+    let imageUrl = undefined
+    const imageFile = formData.get("image") as File
+    if (imageFile && imageFile.size > 0) {
+        const bytes = await imageFile.arrayBuffer()
+        const buffer = Buffer.from(bytes)
+        const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`
+        const filename = `${uniqueSuffix}-${imageFile.name.replace(/[^a-zA-Z0-9.]/g, "_")}`
+        const uploadDir = join(process.cwd(), "public/uploads")
+        const filepath = join(uploadDir, filename)
+        try {
+            await writeFile(filepath, buffer)
+            imageUrl = `/uploads/${filename}`
+        } catch (e) {
+            console.error("Failed to upload image", e)
+        }
+    }
+
     try {
         await prisma.user.create({
-            data: validatedFields.data,
+            data: {
+                ...validatedFields.data,
+                image: imageUrl,
+                dob: validatedFields.data.dob ? new Date(validatedFields.data.dob) : null,
+            },
         })
     } catch (error) {
         return {
@@ -83,8 +120,15 @@ export async function updateEmployee(id: string, prevState: EmployeeFormState, f
         phone: formData.get("phone"),
         address: formData.get("address"),
         emergencyContact: formData.get("emergencyContact"),
+        personalEmail: formData.get("personalEmail"),
+        dob: formData.get("dob"),
+        bloodGroup: formData.get("bloodGroup"),
+        nationalId: formData.get("nationalId"),
         bankName: formData.get("bankName"),
+        bankAccountName: formData.get("bankAccountName"),
         accountNumber: formData.get("accountNumber"),
+        accountType: formData.get("accountType"),
+        branchName: formData.get("branchName"),
         routingNumber: formData.get("routingNumber"),
         swiftCode: formData.get("swiftCode"),
     })
@@ -96,10 +140,31 @@ export async function updateEmployee(id: string, prevState: EmployeeFormState, f
         }
     }
 
+    let imageUrl = undefined
+    const imageFile = formData.get("image") as File
+    if (imageFile && imageFile.size > 0) {
+        const bytes = await imageFile.arrayBuffer()
+        const buffer = Buffer.from(bytes)
+        const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`
+        const filename = `${uniqueSuffix}-${imageFile.name.replace(/[^a-zA-Z0-9.]/g, "_")}`
+        const uploadDir = join(process.cwd(), "public/uploads")
+        const filepath = join(uploadDir, filename)
+        try {
+            await writeFile(filepath, buffer)
+            imageUrl = `/uploads/${filename}`
+        } catch (e) {
+            console.error("Failed to upload image", e)
+        }
+    }
+
     try {
         await prisma.user.update({
             where: { id },
-            data: validatedFields.data,
+            data: {
+                ...validatedFields.data,
+                ...(imageUrl ? { image: imageUrl } : {}),
+                dob: validatedFields.data.dob ? new Date(validatedFields.data.dob) : null,
+            },
         })
     } catch (error) {
         return {

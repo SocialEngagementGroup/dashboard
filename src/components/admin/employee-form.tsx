@@ -46,18 +46,73 @@ export function EmployeeForm({ employee, managers }: EmployeeFormProps) {
                         )}
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
+                        <Label htmlFor="image">Profile Image</Label>
+                        <Input
+                            id="image"
+                            name="image"
+                            type="file"
+                            accept="image/*"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="email">Work Email</Label>
                         <Input
                             id="email"
                             name="email"
                             type="email"
                             defaultValue={employee?.email || ""}
-                            placeholder="john@example.com"
+                            placeholder="john@company.com"
                             required
                         />
                         {state?.errors?.email && (
                             <p className="text-sm text-red-500">{state.errors.email}</p>
                         )}
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="personalEmail">Personal Email</Label>
+                        <Input
+                            id="personalEmail"
+                            name="personalEmail"
+                            type="email"
+                            defaultValue={employee?.personalEmail || ""}
+                            placeholder="john@gmail.com"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="dob">Date of Birth</Label>
+                        <Input
+                            id="dob"
+                            name="dob"
+                            type="date"
+                            defaultValue={employee?.dob ? new Date(employee.dob).toISOString().split('T')[0] : ""}
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="bloodGroup">Blood Group</Label>
+                        <Select name="bloodGroup" defaultValue={employee?.bloodGroup || ""}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select blood group" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="A+">A+</SelectItem>
+                                <SelectItem value="A-">A-</SelectItem>
+                                <SelectItem value="B+">B+</SelectItem>
+                                <SelectItem value="B-">B-</SelectItem>
+                                <SelectItem value="AB+">AB+</SelectItem>
+                                <SelectItem value="AB-">AB-</SelectItem>
+                                <SelectItem value="O+">O+</SelectItem>
+                                <SelectItem value="O-">O-</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="nationalId">National ID</Label>
+                        <Input
+                            id="nationalId"
+                            name="nationalId"
+                            defaultValue={employee?.nationalId || ""}
+                            placeholder="National ID Number"
+                        />
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="role">Role</Label>
@@ -135,12 +190,41 @@ export function EmployeeForm({ employee, managers }: EmployeeFormProps) {
                         />
                     </div>
                     <div className="space-y-2">
+                        <Label htmlFor="branchName">Branch Name</Label>
+                        <Input
+                            id="branchName"
+                            name="branchName"
+                            defaultValue={employee?.branchName || ""}
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="bankAccountName">Account Holder Name</Label>
+                        <Input
+                            id="bankAccountName"
+                            name="bankAccountName"
+                            defaultValue={employee?.bankAccountName || ""}
+                        />
+                    </div>
+                    <div className="space-y-2">
                         <Label htmlFor="accountNumber">Account Number</Label>
                         <Input
                             id="accountNumber"
                             name="accountNumber"
                             defaultValue={employee?.accountNumber || ""}
                         />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="accountType">Account Type</Label>
+                        <Select name="accountType" defaultValue={employee?.accountType || ""}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select account type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="SAVINGS">Savings</SelectItem>
+                                <SelectItem value="CURRENT">Current</SelectItem>
+                                <SelectItem value="SALARY">Salary</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="routingNumber">Routing Number</Label>

@@ -7,7 +7,9 @@ import { auth } from "@/auth"
 
 const BankingSchema = z.object({
     bankName: z.string().min(2, "Bank Name is required"),
+    bankAccountName: z.string().min(2, "Account Name is required"),
     accountNumber: z.string().min(5, "Account Number is required"),
+    branchName: z.string().optional(),
     routingNumber: z.string().optional(),
     swiftCode: z.string().optional(),
 })
@@ -15,7 +17,9 @@ const BankingSchema = z.object({
 export type BankingFormState = {
     errors?: {
         bankName?: string[]
+        bankAccountName?: string[]
         accountNumber?: string[]
+        branchName?: string[]
         routingNumber?: string[]
         swiftCode?: string[]
     }
@@ -30,7 +34,9 @@ export async function updateBankingDetails(prevState: BankingFormState, formData
 
     const validatedFields = BankingSchema.safeParse({
         bankName: formData.get("bankName"),
+        bankAccountName: formData.get("bankAccountName"),
         accountNumber: formData.get("accountNumber"),
+        branchName: formData.get("branchName"),
         routingNumber: formData.get("routingNumber"),
         swiftCode: formData.get("swiftCode"),
     })
@@ -53,6 +59,6 @@ export async function updateBankingDetails(prevState: BankingFormState, formData
         }
     }
 
-    revalidatePath("/dashboard/profile")
+    revalidatePath("/dashboard/salary")
     return { message: "Success! Banking details updated." }
 }
