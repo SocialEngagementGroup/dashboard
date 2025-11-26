@@ -38,6 +38,7 @@ model User {
   sessions      Session[]
   leaveRequests LeaveRequest[]
   documents     Document[]
+  toolRequests  Tool[]
   
   managerId     String?
   manager       User?     @relation("ManagerToEmployee", fields: [managerId], references: [id])
@@ -115,4 +116,19 @@ model Document {
   url       String
   
   createdAt DateTime @default(now())
+}
+
+model Tool {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  url         String
+  image       String?
+  status      String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  
+  requestedById String?
+  requestedBy   User?   @relation(fields: [requestedById], references: [id])
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

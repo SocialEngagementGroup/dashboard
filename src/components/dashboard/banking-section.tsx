@@ -38,7 +38,7 @@ export function BankingSection({ user }: { user: User }) {
                             <Building2 className="h-5 w-5" />
                             Banking Information
                         </h3>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-muted-foreground" suppressHydrationWarning>
                             Last updated: {new Date(user.updatedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                         </p>
                     </div>

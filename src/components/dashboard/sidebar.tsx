@@ -11,6 +11,7 @@ import {
     Banknote,
     TrendingUp,
     BookOpen,
+    Wrench,
     LogOut
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -25,6 +26,11 @@ const sidebarItems = [
         title: "Leave",
         href: "/dashboard/leave",
         icon: Calendar,
+    },
+    {
+        title: "Tools",
+        href: "/dashboard/tools",
+        icon: Wrench,
     },
     {
         title: "Salary",

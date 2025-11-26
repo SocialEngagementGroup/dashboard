@@ -9,11 +9,24 @@ export const dynamic = 'force-dynamic'
 
 export default async function SalaryPage() {
     const session = await auth()
-    if (!session?.user?.id) return null
+    if (!session?.user) {
+        return null
+    }
 
-    const user = await prisma.user.findUnique({
-        where: { id: session.user.id }
-    })
+    // Try to find user by ID first, then by email as fallback
+    // This handles cases where the session has an old user ID from a JWT token
+    let user = null
+    if (session.user.id) {
+        user = await prisma.user.findUnique({
+            where: { id: session.user.id }
+        })
+    }
+
+    if (!user && session.user.email) {
+        user = await prisma.user.findUnique({
+            where: { email: session.user.email }
+        })
+    }
 
     const documents = await prisma.document.findMany({
         where: {

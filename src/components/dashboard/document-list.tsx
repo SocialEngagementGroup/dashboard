@@ -32,7 +32,7 @@ export function DocumentList({ documents, emptyMessage }: { documents: any[], em
                             <CardTitle className="text-base line-clamp-2 mt-2" title={doc.title}>
                                 {doc.title}
                             </CardTitle>
-                            <CardDescription className="flex items-center gap-1 text-xs">
+                            <CardDescription className="flex items-center gap-1 text-xs" suppressHydrationWarning>
                                 {new Date(doc.createdAt).toLocaleDateString('en-US', {
                                     year: 'numeric',
                                     month: 'short',

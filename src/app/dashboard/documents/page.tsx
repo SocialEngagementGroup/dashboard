@@ -15,7 +15,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default async function DocumentsPage() {
     const session = await auth()
-    if (!session?.user?.id) return null
+    if (!session?.user) return null
+
+    // Use session.user.id for queries, falling back to email if needed
+    const userId = session.user.id || session.user.email
 
     const documents = await prisma.document.findMany({
         where: { userId: session.user.id },

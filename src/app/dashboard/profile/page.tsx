@@ -10,12 +10,24 @@ import { User, Mail, Briefcase, Users, Phone, MapPin, AlertCircle } from "lucide
 
 export default async function ProfilePage() {
     const session = await auth()
-    if (!session?.user?.id) return null
+    if (!session?.user) return null
 
-    const user = await prisma.user.findUnique({
-        where: { id: session.user.id },
-        include: { manager: true }
-    })
+    // Try to find user by ID first, then by email as fallback
+    // This handles cases where the session has an old user ID from a JWT token
+    let user = null
+    if (session.user.id) {
+        user = await prisma.user.findUnique({
+            where: { id: session.user.id },
+            include: { manager: true }
+        })
+    }
+
+    if (!user && session.user.email) {
+        user = await prisma.user.findUnique({
+            where: { email: session.user.email },
+            include: { manager: true }
+        })
+    }
 
     if (!user) return null
 
