@@ -104,6 +104,22 @@ export default async function ProfilePage() {
                 </div>
             </div>
 
+
+
+            {/* Bio Section */}
+            {
+                user.bio && (
+                    <Card className="bg-white dark:bg-gray-950">
+                        <CardHeader>
+                            <CardTitle className="text-lg">About</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-muted-foreground whitespace-pre-wrap">{user.bio}</p>
+                        </CardContent>
+                    </Card>
+                )
+            }
+
             <div className="grid gap-6 md:grid-cols-2">
                 {/* Personal Information */}
                 <Card className="border-l-4 border-l-blue-500 hover:shadow-md transition-shadow duration-200">
@@ -360,6 +376,6 @@ export default async function ProfilePage() {
                     </CardContent>
                 </Card>
             </div>
-        </div>
+        </div >
     )
 }

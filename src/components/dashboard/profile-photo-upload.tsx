@@ -13,14 +13,20 @@ export function ProfilePhotoUpload({ user }: { user: User }) {
     const [imageUrl, setImageUrl] = useState(user.image || "")
     const [isHovered, setIsHovered] = useState(false)
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+
+        const formData = new FormData(e.currentTarget)
+        const file = (e.currentTarget.elements.namedItem('photo') as HTMLInputElement).files?.[0]
+
+        if (!file) return
+
+        formData.append('file', file)
 
         try {
             const response = await fetch('/api/profile/photo', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ imageUrl })
+                body: formData,
             })
 
             if (response.ok) {
@@ -64,17 +70,21 @@ export function ProfilePhotoUpload({ user }: { user: User }) {
                     </DialogHeader>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="imageUrl">Image URL</Label>
+                            <Label htmlFor="photo">Profile Photo</Label>
                             <Input
-                                id="imageUrl"
-                                type="url"
-                                placeholder="https://example.com/photo.jpg"
-                                value={imageUrl}
-                                onChange={(e) => setImageUrl(e.target.value)}
+                                id="photo"
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => {
+                                    const file = e.target.files?.[0]
+                                    if (file) {
+                                        setImageUrl(URL.createObjectURL(file))
+                                    }
+                                }}
                                 required
                             />
                             <p className="text-xs text-muted-foreground">
-                                Enter a URL to your profile photo
+                                Upload a new profile photo (JPG, PNG, GIF)
                             </p>
                         </div>
                         {imageUrl && (

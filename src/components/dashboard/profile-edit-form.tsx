@@ -62,11 +62,18 @@ export function ProfileEditForm({ user }: { user: UserWithRelations }) {
         const formData = new FormData(e.currentTarget)
         const data = Object.fromEntries(formData.entries())
 
-        // Filter out empty contacts
-        const validContacts = contacts.filter(c => c.name && c.phone && c.relation)
+        // Filter out empty contacts and ensure types
+        const validContacts = contacts
+            .filter(c => c.name && c.phone && c.relation)
+            .map(c => ({
+                name: c.name!,
+                phone: c.phone!,
+                relation: c.relation!
+            }))
 
         const result = await updateProfile({
             name: data.name as string,
+            bio: data.bio as string,
             dob: data.dob as string,
             gender: data.gender as string,
             bloodGroup: data.bloodGroup as string,
@@ -119,6 +126,16 @@ export function ProfileEditForm({ user }: { user: UserWithRelations }) {
                                 <div className="space-y-2">
                                     <Label htmlFor="name">Full Name</Label>
                                     <Input id="name" name="name" defaultValue={user.name || ""} required />
+                                </div>
+                                <div className="col-span-2 space-y-2">
+                                    <Label htmlFor="bio">Bio</Label>
+                                    <Textarea
+                                        id="bio"
+                                        name="bio"
+                                        defaultValue={user.bio || ""}
+                                        placeholder="Tell us a little about yourself..."
+                                        className="min-h-[100px]"
+                                    />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="dob">Date of Birth</Label>

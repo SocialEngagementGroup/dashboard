@@ -27,6 +27,9 @@ const profileSchema = z.object({
         phone: z.string().min(1, "Phone is required"),
         relation: z.string().min(1, "Relation is required"),
     })).optional(),
+
+    // Bio
+    bio: z.string().optional(),
 })
 
 export async function updateProfile(data: z.infer<typeof profileSchema>) {
