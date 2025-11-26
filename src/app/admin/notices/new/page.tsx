@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import Link from "next/link"
 
 export default function NewNoticePage() {
     const initialState: NoticeFormState = { message: undefined, errors: {} }
@@ -54,8 +55,14 @@ export default function NewNoticePage() {
                             <p className="text-sm text-red-500">{state.message}</p>
                         )}
 
-                        <div className="flex justify-end">
-                            <Button type="submit">Publish Notice</Button>
+                        <div className="flex justify-end gap-2">
+                            <Link href="/admin/notices">
+                                <Button type="button" variant="outline">Cancel</Button>
+                            </Link>
+                            <Button type="submit" disabled={isPending}>
+                                {isPending && <span className="mr-2">⏳</span>}
+                                Publish Notice
+                            </Button>
                         </div>
                     </form>
                 </CardContent>

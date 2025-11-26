@@ -4,7 +4,19 @@ import { Users, FileText, Calendar } from "lucide-react"
 
 export const dynamic = 'force-dynamic'
 
-export default function AdminDashboard() {
+export default async function AdminDashboard() {
+    const [
+        totalEmployees,
+        pendingLeaves,
+        activeNotices,
+        pinnedNotices
+    ] = await Promise.all([
+        prisma.user.count({ where: { role: 'EMPLOYEE' } }),
+        prisma.leaveRequest.count({ where: { status: 'PENDING' } }),
+        prisma.notice.count(),
+        prisma.notice.count({ where: { isPinned: true } })
+    ])
+
     return (
         <div className="flex flex-col gap-6">
             <h1 className="text-3xl font-bold">Dashboard Overview</h1>
@@ -16,8 +28,8 @@ export default function AdminDashboard() {
                         <Users className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">12</div>
-                        <p className="text-xs text-muted-foreground">+2 from last month</p>
+                        <div className="text-2xl font-bold">{totalEmployees}</div>
+                        <p className="text-xs text-muted-foreground">Active employees</p>
                     </CardContent>
                 </Card>
 
@@ -27,7 +39,7 @@ export default function AdminDashboard() {
                         <Calendar className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">3</div>
+                        <div className="text-2xl font-bold">{pendingLeaves}</div>
                         <p className="text-xs text-muted-foreground">Requires attention</p>
                     </CardContent>
                 </Card>
@@ -38,8 +50,8 @@ export default function AdminDashboard() {
                         <FileText className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">5</div>
-                        <p className="text-xs text-muted-foreground">2 pinned</p>
+                        <div className="text-2xl font-bold">{activeNotices}</div>
+                        <p className="text-xs text-muted-foreground">{pinnedNotices} pinned</p>
                     </CardContent>
                 </Card>
             </div>
