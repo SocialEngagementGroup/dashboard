@@ -54,6 +54,7 @@ export async function updateBankingDetails(prevState: BankingFormState, formData
             data: validatedFields.data,
         })
     } catch (error) {
+        console.error("Banking update error:", error)
         return {
             message: "Database Error: Failed to Update Banking Details.",
         }

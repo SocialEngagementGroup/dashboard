@@ -21,11 +21,11 @@ export function BankingSection({ user }: { user: User }) {
                             Edit
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-[600px]">
+                    <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                         <DialogHeader>
                             <DialogTitle>Edit Banking Details</DialogTitle>
                         </DialogHeader>
-                        <BankingForm user={user} onSuccess={() => setOpen(false)} />
+                        <BankingForm user={user} onSuccess={() => setOpen(false)} onCancel={() => setOpen(false)} />
                     </DialogContent>
                 </Dialog>
             </div>

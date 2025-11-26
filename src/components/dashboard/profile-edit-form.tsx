@@ -73,7 +73,7 @@ export function ProfileEditForm({ user }: { user: UserWithRelations }) {
 
         const result = await updateProfile({
             name: data.name as string,
-            bio: data.bio as string,
+
             dob: data.dob as string,
             gender: data.gender as string,
             bloodGroup: data.bloodGroup as string,
@@ -122,75 +122,69 @@ export function ProfileEditForm({ user }: { user: UserWithRelations }) {
                         </TabsList>
 
                         <TabsContent value="personal" className="space-y-4 py-4">
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="name">Full Name</Label>
                                     <Input id="name" name="name" defaultValue={user.name || ""} required />
                                 </div>
-                                <div className="col-span-2 space-y-2">
-                                    <Label htmlFor="bio">Bio</Label>
-                                    <Textarea
-                                        id="bio"
-                                        name="bio"
-                                        defaultValue={user.bio || ""}
-                                        placeholder="Tell us a little about yourself..."
-                                        className="min-h-[100px]"
-                                    />
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="dob">Date of Birth</Label>
+                                        <Input
+                                            id="dob"
+                                            name="dob"
+                                            type="date"
+                                            defaultValue={user.dob ? new Date(user.dob).toISOString().split('T')[0] : ""}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="gender">Gender</Label>
+                                        <Select name="gender" defaultValue={user.gender || ""}>
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Select gender" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="Male">Male</SelectItem>
+                                                <SelectItem value="Female">Female</SelectItem>
+                                                <SelectItem value="Other">Other</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
                                 </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="dob">Date of Birth</Label>
-                                    <Input
-                                        id="dob"
-                                        name="dob"
-                                        type="date"
-                                        defaultValue={user.dob ? new Date(user.dob).toISOString().split('T')[0] : ""}
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="gender">Gender</Label>
-                                    <Select name="gender" defaultValue={user.gender || ""}>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select gender" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="Male">Male</SelectItem>
-                                            <SelectItem value="Female">Female</SelectItem>
-                                            <SelectItem value="Other">Other</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="bloodGroup">Blood Group</Label>
-                                    <Select name="bloodGroup" defaultValue={user.bloodGroup || ""}>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select blood group" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(bg => (
-                                                <SelectItem key={bg} value={bg}>{bg}</SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="maritalStatus">Marital Status</Label>
-                                    <Select name="maritalStatus" defaultValue={user.maritalStatus || ""}>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select status" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="Single">Single</SelectItem>
-                                            <SelectItem value="Married">Married</SelectItem>
-                                            <SelectItem value="Divorced">Divorced</SelectItem>
-                                            <SelectItem value="Widowed">Widowed</SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="bloodGroup">Blood Group</Label>
+                                        <Select name="bloodGroup" defaultValue={user.bloodGroup || ""}>
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Select blood group" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map(bg => (
+                                                    <SelectItem key={bg} value={bg}>{bg}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="maritalStatus">Marital Status</Label>
+                                        <Select name="maritalStatus" defaultValue={user.maritalStatus || ""}>
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Select status" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="Single">Single</SelectItem>
+                                                <SelectItem value="Married">Married</SelectItem>
+                                                <SelectItem value="Divorced">Divorced</SelectItem>
+                                                <SelectItem value="Widowed">Widowed</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="nationality">Nationality</Label>
                                     <Input id="nationality" name="nationality" defaultValue={user.nationality || ""} />
                                 </div>
-                                <div className="col-span-2 space-y-2">
+                                <div className="space-y-2">
                                     <Label htmlFor="nationalId">National ID (NID)</Label>
                                     <Input id="nationalId" name="nationalId" defaultValue={user.nationalId || ""} />
                                 </div>
@@ -198,7 +192,7 @@ export function ProfileEditForm({ user }: { user: UserWithRelations }) {
                         </TabsContent>
 
                         <TabsContent value="contact" className="space-y-4 py-4">
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="phone">Phone Number</Label>
                                     <Input id="phone" name="phone" defaultValue={user.phone || ""} />
@@ -207,11 +201,11 @@ export function ProfileEditForm({ user }: { user: UserWithRelations }) {
                                     <Label htmlFor="personalEmail">Personal Email</Label>
                                     <Input id="personalEmail" name="personalEmail" type="email" defaultValue={user.personalEmail || ""} />
                                 </div>
-                                <div className="col-span-2 space-y-2">
+                                <div className="space-y-2">
                                     <Label htmlFor="presentAddress">Present Address</Label>
                                     <Textarea id="presentAddress" name="presentAddress" defaultValue={user.presentAddress || ""} />
                                 </div>
-                                <div className="col-span-2 space-y-2">
+                                <div className="space-y-2">
                                     <Label htmlFor="permanentAddress">Permanent Address</Label>
                                     <Textarea id="permanentAddress" name="permanentAddress" defaultValue={user.permanentAddress || ""} />
                                 </div>
