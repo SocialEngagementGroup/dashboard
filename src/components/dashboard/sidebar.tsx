@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { signOut } from "next-auth/react"
 import { cn } from "@/lib/utils"
@@ -60,7 +61,14 @@ export function EmployeeSidebar() {
         <div className="flex h-full w-64 flex-col border-r" style={{ backgroundColor: '#5c3333ff' }}>
             <div className="flex h-14 items-center border-b border-white/20 px-6">
                 <Link className="flex items-center gap-2 font-semibold text-white" href="/dashboard">
-                    <span className="">Employee Portal</span>
+                    <Image
+                        src="/uploads/SEG-Favicon-White.png"
+                        alt="SEG Logo"
+                        width={32}
+                        height={32}
+                        className="object-contain"
+                    />
+                    <span className="">SEG Dashboard</span>
                 </Link>
             </div>
             <div className="flex-1 overflow-auto py-2">
