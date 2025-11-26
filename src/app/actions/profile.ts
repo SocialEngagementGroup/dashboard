@@ -22,9 +22,11 @@ const profileSchema = z.object({
     permanentAddress: z.string().optional(),
 
     // Emergency Contact
-    emergencyContactName: z.string().optional(),
-    emergencyContactPhone: z.string().optional(),
-    emergencyContactRelation: z.string().optional(),
+    emergencyContacts: z.array(z.object({
+        name: z.string().min(1, "Name is required"),
+        phone: z.string().min(1, "Phone is required"),
+        relation: z.string().min(1, "Relation is required"),
+    })).optional(),
 })
 
 export async function updateProfile(data: z.infer<typeof profileSchema>) {
@@ -35,12 +37,17 @@ export async function updateProfile(data: z.infer<typeof profileSchema>) {
         }
 
         const validatedData = profileSchema.parse(data)
+        const { emergencyContacts, ...userData } = validatedData
 
         await prisma.user.update({
             where: { email: session.user.email },
             data: {
-                ...validatedData,
-                dob: validatedData.dob ? new Date(validatedData.dob) : null,
+                ...userData,
+                dob: userData.dob ? new Date(userData.dob) : null,
+                emergencyContacts: {
+                    deleteMany: {},
+                    create: emergencyContacts,
+                }
             }
         })
 

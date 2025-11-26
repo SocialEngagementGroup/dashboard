@@ -1,7 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
-import { useFormState } from "react-dom"
+import { useEffect, useActionState } from "react"
 import { updateBankingDetails, BankingFormState } from "@/lib/actions/banking"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,7 +10,7 @@ import { Building2, CreditCard, MapPin, Hash, Globe, UserCircle } from "lucide-r
 
 export function BankingForm({ user, onSuccess }: { user: User; onSuccess?: () => void }) {
     const initialState: BankingFormState = { message: undefined, errors: {} }
-    const [state, dispatch] = useFormState(updateBankingDetails, initialState)
+    const [state, dispatch, isPending] = useActionState(updateBankingDetails, initialState)
 
     useEffect(() => {
         if (state?.message?.includes("Success") && onSuccess) {

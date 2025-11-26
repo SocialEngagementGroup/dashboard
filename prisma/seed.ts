@@ -23,9 +23,15 @@ async function main() {
             nationality: "American",
             presentAddress: "123 Admin Street, Tech City, CA 94000",
             permanentAddress: "456 Family Road, Hometown, NY 10000",
-            emergencyContactName: "Jane Admin",
-            emergencyContactPhone: "+1987654321",
-            emergencyContactRelation: "Sister",
+            emergencyContacts: {
+                create: [
+                    {
+                        name: "Jane Admin",
+                        phone: "+1987654321",
+                        relation: "Sister"
+                    }
+                ]
+            },
             designation: "System Administrator",
             department: "IT",
             employeeId: "EMP-001",
@@ -57,9 +63,20 @@ async function main() {
             nationality: "American",
             presentAddress: "789 Employee Lane, Worktown, CA 94001",
             permanentAddress: "101 Parents Place, Oldtown, TX 75000",
-            emergencyContactName: "Mary Doe",
-            emergencyContactPhone: "+1122334455",
-            emergencyContactRelation: "Spouse",
+            emergencyContacts: {
+                create: [
+                    {
+                        name: "Mary Doe",
+                        phone: "+1122334455",
+                        relation: "Spouse"
+                    },
+                    {
+                        name: "Peter Doe",
+                        phone: "+1998877665",
+                        relation: "Brother"
+                    }
+                ]
+            },
             designation: "Software Engineer",
             department: "Engineering",
             employeeId: "EMP-002",
@@ -89,9 +106,15 @@ async function main() {
             nationality: "Canadian",
             presentAddress: "321 Worker Blvd, Jobcity, CA 94002",
             permanentAddress: "654 North Way, Coldtown, WA 98000",
-            emergencyContactName: "Robert Smith",
-            emergencyContactPhone: "+1555666777",
-            emergencyContactRelation: "Father",
+            emergencyContacts: {
+                create: [
+                    {
+                        name: "Robert Smith",
+                        phone: "+1555666777",
+                        relation: "Father"
+                    }
+                ]
+            },
             designation: "Product Designer",
             department: "Design",
             employeeId: "EMP-003",

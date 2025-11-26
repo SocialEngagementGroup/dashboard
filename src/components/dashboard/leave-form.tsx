@@ -1,6 +1,6 @@
 "use client"
 
-import { useFormState } from "react-dom"
+import { useActionState } from "react"
 import { applyForLeave, LeaveFormState } from "@/lib/actions/apply-leave"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -16,7 +16,7 @@ import {
 
 export function LeaveApplicationForm() {
     const initialState: LeaveFormState = { message: undefined, errors: {} }
-    const [state, dispatch] = useFormState(applyForLeave, initialState)
+    const [state, dispatch, isPending] = useActionState(applyForLeave, initialState)
 
     return (
         <form action={dispatch} className="space-y-4">

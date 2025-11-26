@@ -1,6 +1,6 @@
 "use client"
 
-import { useFormState } from "react-dom"
+import { useActionState } from "react"
 import { createNotice, NoticeFormState } from "@/lib/actions/notice"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function NewNoticePage() {
     const initialState: NoticeFormState = { message: undefined, errors: {} }
-    const [state, dispatch] = useFormState(createNotice, initialState)
+    const [state, dispatch, isPending] = useActionState(createNotice, initialState)
 
     return (
         <div className="flex flex-col gap-6 max-w-2xl mx-auto w-full">

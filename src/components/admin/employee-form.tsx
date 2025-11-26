@@ -1,6 +1,6 @@
 "use client"
 
-import { useFormState } from "react-dom"
+import { useActionState } from "react"
 import { createEmployee, updateEmployee, EmployeeFormState } from "@/lib/actions/employee"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -22,7 +22,7 @@ type EmployeeFormProps = {
 
 export function EmployeeForm({ employee, managers }: EmployeeFormProps) {
     const initialState: EmployeeFormState = { message: undefined, errors: {} }
-    const [state, dispatch] = useFormState(
+    const [state, dispatch, isPending] = useActionState(
         employee ? updateEmployee.bind(null, employee.id) : createEmployee,
         initialState
     )

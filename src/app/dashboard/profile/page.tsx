@@ -39,18 +39,24 @@ export default async function ProfilePage() {
     if (!session?.user) return null
 
     // Try to find user by ID first, then by email as fallback
-    let user: (PrismaUser & { manager: PrismaUser | null }) | null = null
+    let user: (PrismaUser & { manager: PrismaUser | null, emergencyContacts: any[] }) | null = null
     if (session.user.id) {
         user = await prisma.user.findUnique({
             where: { id: session.user.id },
-            include: { manager: true }
+            include: {
+                manager: true,
+                emergencyContacts: true
+            }
         })
     }
 
     if (!user && session.user.email) {
         user = await prisma.user.findUnique({
             where: { email: session.user.email },
-            include: { manager: true }
+            include: {
+                manager: true,
+                emergencyContacts: true
+            }
         })
     }
 
@@ -68,14 +74,14 @@ export default async function ProfilePage() {
     return (
         <div className="flex flex-col gap-6 fade-in pb-10">
             {/* Header Section */}
-            <div className="flex flex-col md:flex-row gap-6 items-start md:items-center bg-white dark:bg-gray-950 p-6 rounded-xl border shadow-sm">
+            <div className="flex flex-col md:flex-row gap-6 items-start md:items-center bg-white dark:bg-gray-950 p-6 rounded-xl">
                 <ProfilePhotoUpload user={user} />
 
                 <div className="flex-1 space-y-2">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div>
-                            <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
-                                Profile Management
+                            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                                {user.name}
                             </h1>
                             <p className="text-muted-foreground flex items-center gap-2 mt-1">
                                 <Briefcase className="h-4 w-4" />
@@ -94,9 +100,6 @@ export default async function ProfilePage() {
                             <Calendar className="h-3 w-3" />
                             Joined: {formatDate(user.joiningDate)}
                         </Badge>
-                        <Badge className={user.role === 'ADMIN' ? 'bg-purple-500' : 'bg-blue-500'}>
-                            {user.role}
-                        </Badge>
                     </div>
                 </div>
             </div>
@@ -112,49 +115,52 @@ export default async function ProfilePage() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <p className="text-sm text-muted-foreground flex items-center gap-2 mb-1">
-                                    <User className="h-3 w-3" /> Full Name
-                                </p>
-                                <p className="font-medium">{user.name}</p>
+                            <div className="flex items-center gap-3">
+                                <User className="h-4 w-4 text-muted-foreground" />
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Full Name</p>
+                                    <p className="font-medium">{user.name}</p>
+                                </div>
                             </div>
-                            <div>
-                                <p className="text-sm text-muted-foreground flex items-center gap-2 mb-1">
-                                    <CalendarDays className="h-3 w-3" /> Date of Birth
-                                </p>
-                                <p className="font-medium">{formatDate(user.dob)}</p>
+                            <div className="flex items-center gap-3">
+                                <CalendarDays className="h-4 w-4 text-muted-foreground" />
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Date of Birth</p>
+                                    <p className="font-medium">{formatDate(user.dob)}</p>
+                                </div>
                             </div>
-                            <div>
-                                <p className="text-sm text-muted-foreground flex items-center gap-2 mb-1">
-                                    <User className="h-3 w-3" /> Gender
-                                </p>
-                                <p className="font-medium">{user.gender || 'Not set'}</p>
+                            <div className="flex items-center gap-3">
+                                <User className="h-4 w-4 text-muted-foreground" />
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Gender</p>
+                                    <p className="font-medium">{user.gender || 'Not set'}</p>
+                                </div>
                             </div>
-                            <div>
-                                <p className="text-sm text-muted-foreground flex items-center gap-2 mb-1">
-                                    <Droplet className="h-3 w-3" /> Blood Group
-                                </p>
-                                <p className="font-medium text-red-500 font-bold">{user.bloodGroup || 'Not set'}</p>
+                            <div className="flex items-center gap-3">
+                                <Droplet className="h-4 w-4 text-muted-foreground" />
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Blood Group</p>
+                                    <p className="font-medium text-red-500 font-bold">{user.bloodGroup || 'Not set'}</p>
+                                </div>
                             </div>
-                            <div>
-                                <p className="text-sm text-muted-foreground flex items-center gap-2 mb-1">
-                                    <Heart className="h-3 w-3" /> Marital Status
-                                </p>
-                                <p className="font-medium">{user.maritalStatus || 'Not set'}</p>
+                            <div className="flex items-center gap-3">
+                                <Heart className="h-4 w-4 text-muted-foreground" />
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Marital Status</p>
+                                    <p className="font-medium">{user.maritalStatus || 'Not set'}</p>
+                                </div>
                             </div>
-                            <div>
-                                <p className="text-sm text-muted-foreground flex items-center gap-2 mb-1">
-                                    <Globe className="h-3 w-3" /> Nationality
-                                </p>
-                                <div className="flex items-center gap-1">
+                            <div className="flex items-center gap-3">
+                                <Globe className="h-4 w-4 text-muted-foreground" />
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Nationality</p>
                                     <p className="font-medium">{user.nationality || 'Not set'}</p>
                                 </div>
                             </div>
-                            <div className="col-span-2">
-                                <p className="text-sm text-muted-foreground flex items-center gap-2 mb-1">
-                                    <Fingerprint className="h-3 w-3" /> National ID (NID)
-                                </p>
-                                <div className="flex items-center gap-1">
+                            <div className="col-span-2 flex items-center gap-3">
+                                <Fingerprint className="h-4 w-4 text-muted-foreground" />
+                                <div>
+                                    <p className="text-sm text-muted-foreground">National ID (NID)</p>
                                     <p className="font-medium font-mono">{user.nationalId || 'Not set'}</p>
                                 </div>
                             </div>
@@ -172,28 +178,28 @@ export default async function ProfilePage() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="space-y-4">
-                            <div className="flex items-start gap-3">
+                            <div className="flex items-center gap-3">
                                 <Mail className="h-4 w-4 text-muted-foreground" />
                                 <div>
                                     <p className="text-sm text-muted-foreground">Personal Email</p>
                                     <p className="font-medium">{user.personalEmail || 'Not set'}</p>
                                 </div>
                             </div>
-                            <div className="flex items-start gap-3">
+                            <div className="flex items-center gap-3">
                                 <Phone className="h-4 w-4 text-muted-foreground" />
                                 <div>
                                     <p className="text-sm text-muted-foreground">Phone Number</p>
                                     <p className="font-medium">{user.phone || 'Not set'}</p>
                                 </div>
                             </div>
-                            <div className="flex items-start gap-3">
+                            <div className="flex items-center gap-3">
                                 <MapPin className="h-4 w-4 text-muted-foreground" />
                                 <div>
                                     <p className="text-sm text-muted-foreground">Present Address</p>
                                     <p className="font-medium text-sm">{user.presentAddress || 'Not set'}</p>
                                 </div>
                             </div>
-                            <div className="flex items-start gap-3">
+                            <div className="flex items-center gap-3">
                                 <Home className="h-4 w-4 text-muted-foreground" />
                                 <div>
                                     <p className="text-sm text-muted-foreground">Permanent Address</p>
@@ -213,23 +219,27 @@ export default async function ProfilePage() {
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {user.emergencyContactName ? (
+                        {user.emergencyContacts && user.emergencyContacts.length > 0 ? (
                             <div className="space-y-4">
-                                <div className="flex items-center gap-4 p-4 bg-red-50 dark:bg-red-950/20 rounded-lg border border-red-100 dark:border-red-900">
-                                    <div className="h-12 w-12 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center">
-                                        <Users className="h-6 w-6 text-red-600 dark:text-red-400" />
+                                {user.emergencyContacts.map((contact: any) => (
+                                    <div key={contact.id} className="flex items-center justify-between p-4 bg-red-50 dark:bg-red-950/20 rounded-lg border border-red-100 dark:border-red-900">
+                                        <div className="flex items-center gap-4">
+                                            <div className="h-12 w-12 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center">
+                                                <Users className="h-6 w-6 text-red-600 dark:text-red-400" />
+                                            </div>
+                                            <div>
+                                                <p className="font-bold text-lg">{contact.name}</p>
+                                                <p className="text-sm text-muted-foreground flex items-center gap-1">
+                                                    <Heart className="h-3 w-3" /> {contact.relation}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-sm">
+                                            <Phone className="h-4 w-4 text-muted-foreground" />
+                                            <span className="font-medium">{contact.phone}</span>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p className="font-bold text-lg">{user.emergencyContactName}</p>
-                                        <p className="text-sm text-muted-foreground flex items-center gap-1">
-                                            <Heart className="h-3 w-3" /> {user.emergencyContactRelation}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-2 text-sm">
-                                    <Phone className="h-4 w-4 text-muted-foreground" />
-                                    <span className="font-medium">{user.emergencyContactPhone}</span>
-                                </div>
+                                ))}
                             </div>
                         ) : (
                             <div className="text-center py-6 text-muted-foreground">
@@ -250,53 +260,58 @@ export default async function ProfilePage() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
-                            <div className="col-span-2">
-                                <p className="text-sm text-muted-foreground flex items-center gap-2 mb-1">
-                                    <Mail className="h-3 w-3" /> Official Email
-                                </p>
-                                <p className="font-medium">{user.email}</p>
+                            <div className="flex items-center gap-3">
+                                <Mail className="h-4 w-4 text-muted-foreground" />
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Official Email</p>
+                                    <p className="font-medium">{user.email}</p>
+                                </div>
                             </div>
-                            <div>
-                                <p className="text-sm text-muted-foreground flex items-center gap-2 mb-1">
-                                    <Hash className="h-3 w-3" /> Employee ID
-                                </p>
-                                <p className="font-medium">{user.employeeId || 'N/A'}</p>
+                            <div className="flex items-center gap-3">
+                                <Hash className="h-4 w-4 text-muted-foreground" />
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Employee ID</p>
+                                    <p className="font-medium">{user.employeeId || 'N/A'}</p>
+                                </div>
                             </div>
-                            <div>
-                                <p className="text-sm text-muted-foreground flex items-center gap-2 mb-1">
-                                    <Calendar className="h-3 w-3" /> Joining Date
-                                </p>
-                                <p className="font-medium">{formatDate(user.joiningDate)}</p>
+                            <div className="flex items-center gap-3">
+                                <Briefcase className="h-4 w-4 text-muted-foreground" />
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Designation</p>
+                                    <p className="font-medium">{user.designation || user.role}</p>
+                                </div>
                             </div>
-                            <div>
-                                <p className="text-sm text-muted-foreground flex items-center gap-2 mb-1">
-                                    <Briefcase className="h-3 w-3" /> Designation
-                                </p>
-                                <p className="font-medium">{user.designation || user.role}</p>
+                            <div className="flex items-center gap-3">
+                                <Building className="h-4 w-4 text-muted-foreground" />
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Department</p>
+                                    <p className="font-medium">{user.department || 'General'}</p>
+                                </div>
                             </div>
-                            <div>
-                                <p className="text-sm text-muted-foreground flex items-center gap-2 mb-1">
-                                    <Building className="h-3 w-3" /> Department
-                                </p>
-                                <p className="font-medium">{user.department || 'General'}</p>
+                            <div className="flex items-center gap-3">
+                                <Calendar className="h-4 w-4 text-muted-foreground" />
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Joining Date</p>
+                                    <p className="font-medium">{formatDate(user.joiningDate)}</p>
+                                </div>
                             </div>
-                            <div className="col-span-2">
-                                <p className="text-sm text-muted-foreground flex items-center gap-2 mb-1">
-                                    <UserCheck className="h-3 w-3" /> Reporting Manager
-                                </p>
-                                {user.manager ? (
-                                    <div className="flex items-center gap-2 mt-1">
-                                        <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center text-xs font-bold">
-                                            {user.manager.name?.charAt(0) || 'M'}
+                            <div className="flex items-center gap-3">
+                                <UserCheck className="h-4 w-4 text-muted-foreground" />
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Reporting Manager</p>
+                                    {user.manager ? (
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <div className="h-6 w-6 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center text-xs font-bold">
+                                                {user.manager.name?.charAt(0) || 'M'}
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-medium">{user.manager.name}</p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <p className="text-sm font-medium">{user.manager.name}</p>
-                                            <p className="text-xs text-muted-foreground">{user.manager.email}</p>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <p className="font-medium">None</p>
-                                )}
+                                    ) : (
+                                        <p className="font-medium">None</p>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </CardContent>
@@ -315,27 +330,30 @@ export default async function ProfilePage() {
                     </CardHeader>
                     <CardContent>
                         <div className="grid md:grid-cols-3 gap-4">
-                            <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                                <p className="text-sm text-muted-foreground flex items-center gap-2 mb-1">
-                                    <Building2 className="h-3 w-3" /> Bank Name
-                                </p>
-                                <p className="font-medium">{user.bankName || 'Not set'}</p>
+                            <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg flex items-center gap-3">
+                                <Building2 className="h-4 w-4 text-muted-foreground" />
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Bank Name</p>
+                                    <p className="font-medium">{user.bankName || 'Not set'}</p>
+                                </div>
                             </div>
-                            <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                                <p className="text-sm text-muted-foreground flex items-center gap-2 mb-1">
-                                    <CreditCard className="h-3 w-3" /> Account Number
-                                </p>
-                                <p className="font-medium font-mono">
-                                    {user.accountNumber ? `**** ${user.accountNumber.slice(-4)} ` : 'Not set'}
-                                </p>
+                            <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg flex items-center gap-3">
+                                <CreditCard className="h-4 w-4 text-muted-foreground" />
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Account Number</p>
+                                    <p className="font-medium font-mono">
+                                        {user.accountNumber ? `**** ${user.accountNumber.slice(-4)} ` : 'Not set'}
+                                    </p>
+                                </div>
                             </div>
-                            <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                                <p className="text-sm text-muted-foreground flex items-center gap-2 mb-1">
-                                    <BadgeCheck className="h-3 w-3" /> Status
-                                </p>
-                                <div className="flex items-center gap-2 mt-1">
-                                    <Shield className="h-4 w-4 text-green-500" />
-                                    <span className="font-medium text-green-600 dark:text-green-400">Active</span>
+                            <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg flex items-center gap-3">
+                                <BadgeCheck className="h-4 w-4 text-muted-foreground" />
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Status</p>
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <Shield className="h-3 w-3 text-green-500" />
+                                        <span className="font-medium text-green-600 dark:text-green-400">Active</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { User } from "@prisma/client"
+import { User, EmergencyContact } from "@prisma/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -23,12 +23,37 @@ import {
 } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { updateProfile } from "@/app/actions/profile"
-import { Pencil, Loader2 } from "lucide-react"
+import { Pencil, Loader2, Plus, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 
-export function ProfileEditForm({ user }: { user: User }) {
+type UserWithRelations = User & {
+    emergencyContacts: EmergencyContact[]
+}
+
+export function ProfileEditForm({ user }: { user: UserWithRelations }) {
     const [open, setOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
+    const [contacts, setContacts] = useState<Partial<EmergencyContact>[]>(
+        user.emergencyContacts?.length > 0
+            ? user.emergencyContacts
+            : [{ name: "", phone: "", relation: "" }]
+    )
+
+    const handleAddContact = () => {
+        setContacts([...contacts, { name: "", phone: "", relation: "" }])
+    }
+
+    const handleRemoveContact = (index: number) => {
+        const newContacts = [...contacts]
+        newContacts.splice(index, 1)
+        setContacts(newContacts)
+    }
+
+    const handleContactChange = (index: number, field: keyof EmergencyContact, value: string) => {
+        const newContacts = [...contacts]
+        newContacts[index] = { ...newContacts[index], [field]: value }
+        setContacts(newContacts)
+    }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -36,6 +61,9 @@ export function ProfileEditForm({ user }: { user: User }) {
 
         const formData = new FormData(e.currentTarget)
         const data = Object.fromEntries(formData.entries())
+
+        // Filter out empty contacts
+        const validContacts = contacts.filter(c => c.name && c.phone && c.relation)
 
         const result = await updateProfile({
             name: data.name as string,
@@ -49,9 +77,7 @@ export function ProfileEditForm({ user }: { user: User }) {
             personalEmail: data.personalEmail as string,
             presentAddress: data.presentAddress as string,
             permanentAddress: data.permanentAddress as string,
-            emergencyContactName: data.emergencyContactName as string,
-            emergencyContactPhone: data.emergencyContactPhone as string,
-            emergencyContactRelation: data.emergencyContactRelation as string,
+            emergencyContacts: validContacts,
         })
 
         setIsLoading(false)
@@ -177,20 +203,59 @@ export function ProfileEditForm({ user }: { user: User }) {
 
                         <TabsContent value="emergency" className="space-y-4 py-4">
                             <div className="space-y-4">
-                                <div className="space-y-2">
-                                    <Label htmlFor="emergencyContactName">Contact Name</Label>
-                                    <Input id="emergencyContactName" name="emergencyContactName" defaultValue={user.emergencyContactName || ""} />
-                                </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="emergencyContactPhone">Phone Number</Label>
-                                        <Input id="emergencyContactPhone" name="emergencyContactPhone" defaultValue={user.emergencyContactPhone || ""} />
+                                {contacts.map((contact, index) => (
+                                    <div key={index} className="p-4 border rounded-lg space-y-4 relative bg-gray-50 dark:bg-gray-900/50">
+                                        <div className="absolute right-2 top-2">
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-100"
+                                                onClick={() => handleRemoveContact(index)}
+                                                disabled={contacts.length === 1}
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <Label>Contact Name</Label>
+                                            <Input
+                                                value={contact.name || ""}
+                                                onChange={(e) => handleContactChange(index, "name", e.target.value)}
+                                                placeholder="Full Name"
+                                            />
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <Label>Phone Number</Label>
+                                                <Input
+                                                    value={contact.phone || ""}
+                                                    onChange={(e) => handleContactChange(index, "phone", e.target.value)}
+                                                    placeholder="+1234567890"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label>Relationship</Label>
+                                                <Input
+                                                    value={contact.relation || ""}
+                                                    onChange={(e) => handleContactChange(index, "relation", e.target.value)}
+                                                    placeholder="Spouse, Parent, etc."
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="emergencyContactRelation">Relationship</Label>
-                                        <Input id="emergencyContactRelation" name="emergencyContactRelation" defaultValue={user.emergencyContactRelation || ""} />
-                                    </div>
-                                </div>
+                                ))}
+
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    className="w-full border-dashed"
+                                    onClick={handleAddContact}
+                                >
+                                    <Plus className="h-4 w-4 mr-2" />
+                                    Add Emergency Contact
+                                </Button>
                             </div>
                         </TabsContent>
                     </Tabs>
