@@ -1,4 +1,4 @@
-```typescript
+
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/auth"
 import { User as PrismaUser } from "@prisma/client"
@@ -326,7 +326,7 @@ export default async function ProfilePage() {
                                     <CreditCard className="h-3 w-3" /> Account Number
                                 </p>
                                 <p className="font-medium font-mono">
-                                    {user.accountNumber ? `•••• ${ user.accountNumber.slice(-4) } ` : 'Not set'}
+                                    {user.accountNumber ? `**** ${user.accountNumber.slice(-4)} ` : 'Not set'}
                                 </p>
                             </div>
                             <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
