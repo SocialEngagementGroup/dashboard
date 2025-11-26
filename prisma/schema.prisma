@@ -17,12 +17,32 @@ model User {
   
   // Employee Details
   phone            String?
-  address          String?
-  emergencyContact String?
+  address          String? // Deprecated - use presentAddress/permanentAddress
+  emergencyContact String? // Deprecated - use emergency contact fields below
   personalEmail    String?
   dob              DateTime?
   bloodGroup       String?
   nationalId       String?
+  
+  // Address Details
+  presentAddress   String?
+  permanentAddress String?
+  
+  // Emergency Contact Details
+  emergencyContactName     String?
+  emergencyContactPhone    String?
+  emergencyContactRelation String?
+  
+  // Personal Details
+  gender           String?
+  maritalStatus    String?
+  nationality      String?
+  
+  // Professional Details
+  designation      String?
+  department       String?
+  joiningDate      DateTime?
+  employeeId       String?
   
   // Banking Details
   bankName        String?

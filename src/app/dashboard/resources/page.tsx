@@ -25,7 +25,7 @@ export default async function ResourcesPage() {
         <div className="flex flex-col gap-6 fade-in">
             <div>
                 <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
-                    Resources
+                    Resource Management
                 </h1>
                 <p className="text-muted-foreground mt-1">Access company policies, SOPs, and documentation</p>
             </div>
