@@ -47,13 +47,17 @@ function getMonthOptions() {
     return options
 }
 
-export function PaymentRow({ employee, lastPayment }: { employee: Employee; lastPayment: LastPayment }) {
+export function PaymentRow({ employee, lastPayment, lastSalaryPayment, lastBonusPayment, commonRemarks = [] }: { employee: Employee; lastPayment: LastPayment; lastSalaryPayment?: LastPayment; lastBonusPayment?: LastPayment; commonRemarks?: string[] }) {
     const router = useRouter()
     const [paymentType, setPaymentType] = useState<string>("Salary")
     const [currency, setCurrency] = useState<string>(lastPayment?.currency || "BDT")
     const [amount, setAmount] = useState<string>(lastPayment?.amount?.toString() || "50000")
+    const [remarks, setRemarks] = useState<string>("")
     const [isProcessing, setIsProcessing] = useState(false)
     const [isPaid, setIsPaid] = useState(false)
+
+    // Determine which last payment to show based on selected type
+    const displayedLastPayment = paymentType === 'Bonus' ? lastBonusPayment : lastSalaryPayment
 
     // Set default month to previous month
     const now = new Date()
@@ -65,12 +69,13 @@ export function PaymentRow({ employee, lastPayment }: { employee: Employee; last
 
     // Check if employee has been paid for the selected month
     const isPaidForSelectedMonth = () => {
-        if (!lastPayment) return false
+        // Only check for Salary payments
+        if (!lastSalaryPayment) return false
 
         const selectedDate = new Date(parseInt(selectedMonth.split('-')[0]), parseInt(selectedMonth.split('-')[1]) - 1, 1)
         const selectedMonthName = selectedDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
 
-        return lastPayment.month === selectedMonthName
+        return lastSalaryPayment.month === selectedMonthName
     }
 
     const handleProcessPayment = async () => {
@@ -93,6 +98,7 @@ export function PaymentRow({ employee, lastPayment }: { employee: Employee; last
                     currency,
                     month: selectedMonth,
                     paymentType,
+                    remarks: paymentType === 'Bonus' ? remarks : undefined,
                 }),
             })
 
@@ -158,14 +164,14 @@ export function PaymentRow({ employee, lastPayment }: { employee: Employee; last
             </TableCell>
 
             <TableCell>
-                {lastPayment ? (
+                {displayedLastPayment ? (
                     <div className="text-sm space-y-1">
-                        <div className="font-medium">{lastPayment.type}</div>
-                        <div className="text-xs text-muted-foreground">{lastPayment.amount} {lastPayment.currency}</div>
-                        <div className="text-xs text-muted-foreground">{lastPayment.month}</div>
+                        <div className="font-medium">{displayedLastPayment.type}</div>
+                        <div className="text-xs text-muted-foreground">{displayedLastPayment.amount} {displayedLastPayment.currency}</div>
+                        <div className="text-xs text-muted-foreground">{displayedLastPayment.month}</div>
                     </div>
                 ) : (
-                    <span className="text-sm text-muted-foreground">No payment yet</span>
+                    <span className="text-sm text-muted-foreground">No {paymentType.toLowerCase()} yet</span>
                 )}
             </TableCell>
 
@@ -182,18 +188,37 @@ export function PaymentRow({ employee, lastPayment }: { employee: Employee; last
             </TableCell>
 
             <TableCell>
-                <Select value={selectedMonth} onValueChange={setSelectedMonth} disabled={isPaid}>
-                    <SelectTrigger className="w-full">
-                        <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {monthOptions.map((option) => (
-                            <SelectItem key={option.value} value={option.value}>
-                                {option.label}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
+                {paymentType === 'Bonus' ? (
+                    <div className="relative">
+                        <Input
+                            type="text"
+                            value={remarks}
+                            onChange={(e) => setRemarks(e.target.value)}
+                            placeholder="Remarks (e.g. Eid Bonus)"
+                            className="w-full"
+                            list={`remarks-list-${employee.id}`}
+                            disabled={isPaid}
+                        />
+                        <datalist id={`remarks-list-${employee.id}`}>
+                            {commonRemarks.map((remark) => (
+                                <option key={remark} value={remark} />
+                            ))}
+                        </datalist>
+                    </div>
+                ) : (
+                    <Select value={selectedMonth} onValueChange={setSelectedMonth} disabled={isPaid}>
+                        <SelectTrigger className="w-full">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {monthOptions.map((option) => (
+                                <SelectItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                )}
             </TableCell>
 
             <TableCell>

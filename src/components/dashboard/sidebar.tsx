@@ -9,11 +9,12 @@ import {
     LayoutDashboard,
     User,
     Calendar,
-    Banknote,
+    CircleDollarSign,
     TrendingUp,
     BookOpen,
     Wrench,
-    LogOut
+    LogOut,
+    FileText
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -29,6 +30,11 @@ const sidebarItems = [
         icon: Calendar,
     },
     {
+        title: "Documents",
+        href: "/dashboard/documents",
+        icon: FileText,
+    },
+    {
         title: "Tools",
         href: "/dashboard/tools",
         icon: Wrench,
@@ -36,7 +42,7 @@ const sidebarItems = [
     {
         title: "Salary",
         href: "/dashboard/salary",
-        icon: Banknote,
+        icon: CircleDollarSign,
     },
     {
         title: "Performance",

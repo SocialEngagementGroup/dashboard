@@ -41,9 +41,10 @@ export default async function PaymentPage() {
         }
     })
 
-    // Fetch last payment for each employee
+    // Fetch last payment and last salary for each employee
     const employeesWithLastPayment = await Promise.all(
         employees.map(async (employee) => {
+            // Get the very last payment (could be Salary or Bonus)
             const lastDocument = await prisma.document.findFirst({
                 where: {
                     userId: employee.id,
@@ -54,24 +55,72 @@ export default async function PaymentPage() {
                 }
             })
 
-            let lastPayment = null
-            if (lastDocument) {
-                // Extract payment details from document title
-                // Expected format: "Salary Slip - October 2025" or "Bonus - October 2025"
-                const titleMatch = lastDocument.title.match(/(Salary|Bonus).*?([A-Z][a-z]+ \d{4})/)
-                if (titleMatch) {
-                    lastPayment = {
-                        type: titleMatch[1],
-                        month: titleMatch[2],
-                        amount: 50000, // Placeholder since we don't store amount yet
-                        currency: 'BDT' // Placeholder since we don't store currency yet
+            // Get the last SALARY payment specifically
+            const lastSalaryDocument = await prisma.document.findFirst({
+                where: {
+                    userId: employee.id,
+                    type: 'SALARY_SLIP',
+                    title: {
+                        startsWith: 'Salary'
                     }
+                },
+                orderBy: {
+                    createdAt: 'desc'
+                }
+            })
+
+            // Get the last BONUS payment specifically
+            const lastBonusDocument = await prisma.document.findFirst({
+                where: {
+                    userId: employee.id,
+                    type: 'SALARY_SLIP',
+                    title: {
+                        startsWith: 'Bonus'
+                    }
+                },
+                orderBy: {
+                    createdAt: 'desc'
+                }
+            })
+
+            const parseDocument = (doc: typeof lastDocument) => {
+                if (!doc) return null
+
+                // Split title by " - "
+                const parts = doc.title.split(' - ')
+                const type = parts[0] || "Salary"
+                let month = ""
+                let amount = 0
+                let currency = "BDT"
+
+                if (type === "Salary") {
+                    // Format: Salary - Month Year - Amount Currency
+                    month = parts[1] || ""
+                } else {
+                    // Format: Bonus - Remark - Amount Currency
+                    month = parts[1] || "" // This is the remark
+                }
+
+                // Extract amount and currency from the last part or regex
+                const amountMatch = doc.title.match(/(\d+(?:,\d+)*(?:\.\d+)?)\s*(BDT|USD|EUR|GBP)/)
+                if (amountMatch) {
+                    amount = parseFloat(amountMatch[1].replace(/,/g, ''))
+                    currency = amountMatch[2]
+                }
+
+                return {
+                    type,
+                    month,
+                    amount,
+                    currency
                 }
             }
 
             return {
                 ...employee,
-                lastPayment
+                lastPayment: parseDocument(lastDocument),
+                lastSalaryPayment: parseDocument(lastSalaryDocument),
+                lastBonusPayment: parseDocument(lastBonusDocument)
             }
         })
     )
@@ -80,6 +129,36 @@ export default async function PaymentPage() {
     const now = new Date()
     const previousMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1)
     const monthYear = previousMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+
+    // Fetch all salary slip documents to extract common remarks for bonuses
+    const allDocuments = await prisma.document.findMany({
+        where: {
+            type: 'SALARY_SLIP',
+            title: {
+                startsWith: 'Bonus - '
+            }
+        },
+        select: {
+            title: true
+        },
+        distinct: ['title']
+    })
+
+    // Extract remarks from titles (format: "Bonus - Remark - Amount Currency")
+    const commonRemarks = allDocuments
+        .map(doc => {
+            // Split by " - "
+            const parts = doc.title.split(' - ')
+            // parts[0] is "Bonus", parts[1] is Remark, parts[2] is Amount (optional/new)
+            if (parts.length >= 2) {
+                return parts[1]
+            }
+            return ''
+        })
+        .filter(remark => remark.trim() !== '')
+        .sort()
+        // Remove duplicates again after extraction
+        .filter((item, index, array) => array.indexOf(item) === index)
 
     return (
         <div className="flex flex-col gap-6">
@@ -110,7 +189,7 @@ export default async function PaymentPage() {
                                     <TableHead className="w-[250px]">Bank Details</TableHead>
                                     <TableHead className="w-[150px]">Last Payment</TableHead>
                                     <TableHead className="w-[120px]">Type</TableHead>
-                                    <TableHead className="w-[180px]">Month</TableHead>
+                                    <TableHead className="w-[180px]">Remarks / Month</TableHead>
                                     <TableHead className="w-[120px]">Currency</TableHead>
                                     <TableHead className="w-[140px]">Amount</TableHead>
                                     <TableHead className="w-[100px] text-right">Action</TableHead>
@@ -122,6 +201,9 @@ export default async function PaymentPage() {
                                         key={employee.id}
                                         employee={employee}
                                         lastPayment={employee.lastPayment}
+                                        lastSalaryPayment={employee.lastSalaryPayment}
+                                        lastBonusPayment={employee.lastBonusPayment}
+                                        commonRemarks={commonRemarks}
                                     />
                                 ))}
                                 {employees.length === 0 && (

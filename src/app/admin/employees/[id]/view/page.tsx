@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator"
 import Link from "next/link"
 import { ArrowLeft, Wallet, User, Phone, MapPin, Building2, CreditCard, Calendar, Users, FileText, Mail, Hash, Home } from "lucide-react"
+import { SalaryHistoryTable } from "@/components/dashboard/salary-history-table"
 
 export const dynamic = 'force-dynamic'
 
@@ -20,7 +21,6 @@ export default async function ViewEmployeePage({ params }: { params: Promise<{ i
             documents: {
                 where: { type: 'SALARY_SLIP' },
                 orderBy: { createdAt: 'desc' },
-                take: 10
             }
         }
     })
@@ -319,41 +319,7 @@ export default async function ViewEmployeePage({ params }: { params: Promise<{ i
                             <CardDescription>Recent salary and bonus payments</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            {employee.documents && employee.documents.length > 0 ? (
-                                <div className="divide-y">
-                                    {employee.documents.map((doc: any) => {
-                                        const titleMatch = doc.title.match(/(Salary|Bonus).*?([A-Z][a-z]+ \d{4})/)
-                                        const paymentType = titleMatch ? titleMatch[1] : 'Payment'
-                                        const paymentMonth = titleMatch ? titleMatch[2] : 'Unknown'
-
-                                        return (
-                                            <div key={doc.id} className="flex items-center justify-between py-3 first:pt-0 last:pb-0">
-                                                <div className="flex items-center gap-3">
-                                                    <div className="h-8 w-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                                                        <Wallet className="h-4 w-4 text-green-600 dark:text-green-400" />
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-sm font-medium">{paymentType}</p>
-                                                        <p className="text-xs text-muted-foreground">{paymentMonth}</p>
-                                                    </div>
-                                                </div>
-                                                <div className="text-right">
-                                                    <Badge variant="outline" className="text-green-600 border-green-200 bg-green-50 dark:bg-green-950/20 dark:border-green-900">
-                                                        Paid
-                                                    </Badge>
-                                                    <p className="text-xs text-muted-foreground mt-0.5">
-                                                        {formatDate(doc.createdAt)}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        )
-                                    })}
-                                </div>
-                            ) : (
-                                <div className="text-center py-8">
-                                    <p className="text-sm text-muted-foreground">No payment history found</p>
-                                </div>
-                            )}
+                            <SalaryHistoryTable documents={employee.documents} isAdmin={true} />
                         </CardContent>
                     </Card>
                 </TabsContent>
