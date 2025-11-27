@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export const dynamic = 'force-dynamic'
 import { Pin, Calendar, Users, FileText, TrendingUp } from "lucide-react"
+import { EstClock } from "@/components/est-clock"
 
 export default async function DashboardPage() {
     const session = await auth()
@@ -44,6 +45,7 @@ export default async function DashboardPage() {
                     </h1>
                     <p className="text-muted-foreground mt-1">Here's what's happening today</p>
                 </div>
+                <EstClock />
             </div>
 
             {/* Quick Stats */}

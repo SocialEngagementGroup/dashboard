@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Users, FileText, Calendar } from "lucide-react"
+import { EstClock } from "@/components/est-clock"
 
 export const dynamic = 'force-dynamic'
 
@@ -19,7 +20,10 @@ export default async function AdminDashboard() {
 
     return (
         <div className="flex flex-col gap-6">
-            <h1 className="text-3xl font-bold">Dashboard Overview</h1>
+            <div className="flex items-center justify-between">
+                <h1 className="text-3xl font-bold">Dashboard Overview</h1>
+                <EstClock />
+            </div>
 
             <div className="grid gap-6 md:grid-cols-3">
                 <Card>
