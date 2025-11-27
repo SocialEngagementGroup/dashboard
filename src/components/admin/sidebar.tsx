@@ -11,7 +11,8 @@ import {
     FileText,
     Calendar,
     LogOut,
-    User
+    User,
+    Wallet
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -35,6 +36,11 @@ const sidebarItems = [
         title: "Leaves",
         href: "/admin/leaves",
         icon: Calendar,
+    },
+    {
+        title: "Payment",
+        href: "/admin/payment",
+        icon: Wallet,
     },
 ]
 

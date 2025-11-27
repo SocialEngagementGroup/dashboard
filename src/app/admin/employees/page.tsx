@@ -46,7 +46,14 @@ export default async function EmployeesPage() {
                     <TableBody>
                         {employees.map((employee) => (
                             <TableRow key={employee.id}>
-                                <TableCell className="font-medium">{employee.name || 'N/A'}</TableCell>
+                                <TableCell className="font-medium">
+                                    <Link
+                                        href={`/admin/employees/${employee.id}/view`}
+                                        className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline"
+                                    >
+                                        {employee.name || 'N/A'}
+                                    </Link>
+                                </TableCell>
                                 <TableCell>{employee.email}</TableCell>
                                 <TableCell>{employee.role}</TableCell>
                                 <TableCell>{employee.manager?.name || '-'}</TableCell>
