@@ -124,7 +124,7 @@ export function PaymentRow({ employee, lastPayment, lastSalaryPayment, lastBonus
                 <div className="space-y-1">
                     <Link
                         href={`/admin/employees/${employee.id}/view`}
-                        className="font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline block"
+                        className="font-medium hover:underline text-primary block"
                     >
                         {employee.name || 'N/A'}
                     </Link>

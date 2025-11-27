@@ -8,11 +8,19 @@ import { Separator } from "@/components/ui/separator"
 import Link from "next/link"
 import { ArrowLeft, Wallet, User, Phone, MapPin, Building2, CreditCard, Calendar, Users, FileText, Mail, Hash, Home } from "lucide-react"
 import { SalaryHistoryTable } from "@/components/dashboard/salary-history-table"
+import { LeaveHistoryTab } from "@/components/dashboard/leave-history-tab"
 
 export const dynamic = 'force-dynamic'
 
-export default async function ViewEmployeePage({ params }: { params: Promise<{ id: string }> }) {
+export default async function ViewEmployeePage({
+    params,
+    searchParams
+}: {
+    params: Promise<{ id: string }>
+    searchParams: Promise<{ tab?: string }>
+}) {
     const { id } = await params
+    const { tab } = await searchParams
     const employee = await prisma.user.findUnique({
         where: { id },
         include: {
@@ -21,6 +29,9 @@ export default async function ViewEmployeePage({ params }: { params: Promise<{ i
             documents: {
                 where: { type: 'SALARY_SLIP' },
                 orderBy: { createdAt: 'desc' },
+            },
+            leaveRequests: {
+                orderBy: { createdAt: 'desc' }
             }
         }
     })
@@ -79,7 +90,7 @@ export default async function ViewEmployeePage({ params }: { params: Promise<{ i
             </div>
 
             {/* Main Content */}
-            <Tabs defaultValue="overview" className="w-full space-y-4">
+            <Tabs defaultValue={tab || "overview"} className="w-full space-y-4">
                 <TabsList className="inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground">
                     <TabsTrigger
                         value="overview"
@@ -98,6 +109,12 @@ export default async function ViewEmployeePage({ params }: { params: Promise<{ i
                         className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow"
                     >
                         Documents
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="leaves"
+                        className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow"
+                    >
+                        Leaves
                     </TabsTrigger>
                 </TabsList>
 
@@ -354,6 +371,11 @@ export default async function ViewEmployeePage({ params }: { params: Promise<{ i
                             )}
                         </CardContent>
                     </Card>
+                </TabsContent>
+
+                {/* Leaves Tab */}
+                <TabsContent value="leaves" className="pt-2">
+                    <LeaveHistoryTab leaveRequests={employee.leaveRequests} />
                 </TabsContent>
             </Tabs>
         </div>

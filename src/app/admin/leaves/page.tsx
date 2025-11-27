@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma"
+import { calculateBusinessDays } from "@/lib/utils"
 
 export const dynamic = 'force-dynamic'
 import {
@@ -13,6 +14,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { updateLeaveStatus } from "@/lib/actions/leave"
 import { Check, X } from "lucide-react"
+import Link from "next/link"
 
 export default async function LeaveRequestsPage() {
     const requests = await prisma.leaveRequest.findMany({
@@ -30,6 +32,7 @@ export default async function LeaveRequestsPage() {
                         <TableRow>
                             <TableHead>Employee</TableHead>
                             <TableHead>Type</TableHead>
+                            <TableHead>Duration</TableHead>
                             <TableHead>Dates</TableHead>
                             <TableHead>Reason</TableHead>
                             <TableHead>Status</TableHead>
@@ -39,8 +42,23 @@ export default async function LeaveRequestsPage() {
                     <TableBody>
                         {requests.map((request) => (
                             <TableRow key={request.id}>
-                                <TableCell className="font-medium">{request.user.name}</TableCell>
+                                <TableCell>
+                                    <div className="flex flex-col">
+                                        <Link
+                                            href={`/admin/employees/${request.user.id}/view?tab=leaves`}
+                                            className="font-medium hover:underline text-primary"
+                                        >
+                                            {request.user.name}
+                                        </Link>
+                                        <span className="text-xs text-muted-foreground">
+                                            {request.user.designation || request.user.role}
+                                        </span>
+                                    </div>
+                                </TableCell>
                                 <TableCell>{request.type}</TableCell>
+                                <TableCell>
+                                    {calculateBusinessDays(request.startDate, request.endDate)} {calculateBusinessDays(request.startDate, request.endDate) === 1 ? 'day' : 'days'}
+                                </TableCell>
                                 <TableCell>
                                     {new Date(request.startDate).toLocaleDateString()} - {new Date(request.endDate).toLocaleDateString()}
                                 </TableCell>
@@ -79,9 +97,11 @@ export default async function LeaveRequestsPage() {
                         ))}
                         {requests.length === 0 && (
                             <TableRow>
-                                <TableCell colSpan={6} className="text-center h-24 text-muted-foreground">
-                                    No leave requests found.
-                                </TableCell>
+                                <TableRow>
+                                    <TableCell colSpan={7} className="text-center h-24 text-muted-foreground">
+                                        No leave requests found.
+                                    </TableCell>
+                                </TableRow>
                             </TableRow>
                         )}
                     </TableBody>

@@ -291,7 +291,7 @@ export function SalaryHistoryTable({ documents, isAdmin = false }: SalaryHistory
                             filteredRecords.map((record) => (
                                 <TableRow key={record.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                                     <TableCell>
-                                        <Badge variant={record.type === "Salary" ? "default" : "secondary"}>
+                                        <Badge variant={record.type === "Salary" ? "secondary" : "default"}>
                                             {record.type}
                                         </Badge>
                                     </TableCell>

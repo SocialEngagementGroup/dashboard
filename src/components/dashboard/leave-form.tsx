@@ -18,8 +18,8 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import { cn } from "@/lib/utils"
-import { format, differenceInDays } from "date-fns"
+import { cn, calculateBusinessDays } from "@/lib/utils"
+import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
 import { DateRange } from "react-day-picker"
 
@@ -31,10 +31,11 @@ export function LeaveApplicationForm() {
 
     useEffect(() => {
         if (date?.from && date?.to) {
-            const days = differenceInDays(date.to, date.from) + 1
+            const days = calculateBusinessDays(date.from, date.to)
             setDuration(days)
         } else if (date?.from) {
-            setDuration(1)
+            const days = calculateBusinessDays(date.from, date.from)
+            setDuration(days)
         } else {
             setDuration(0)
         }

@@ -163,76 +163,47 @@ export default async function PaymentPage() {
     return (
         <div className="flex flex-col gap-6">
             <div>
-                <h1 className="text-3xl font-bold flex items-center gap-2">
-                    <Wallet className="h-8 w-8" />
-                    Employee Payments
-                </h1>
-                <p className="text-muted-foreground mt-1">
-                    Process salary payments for {monthYear}
-                </p>
+                <h1 className="text-3xl font-bold">Payment Management</h1>
             </div>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Payment Overview</CardTitle>
-                    <CardDescription>
-                        {employees.length} employee{employees.length !== 1 ? 's' : ''} with banking information configured
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="rounded-md border bg-white dark:bg-gray-900">
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead className="w-[180px]">Employee</TableHead>
-                                    <TableHead className="w-[160px]">Status</TableHead>
-                                    <TableHead className="w-[250px]">Bank Details</TableHead>
-                                    <TableHead className="w-[150px]">Last Payment</TableHead>
-                                    <TableHead className="w-[120px]">Type</TableHead>
-                                    <TableHead className="w-[180px]">Remarks / Month</TableHead>
-                                    <TableHead className="w-[120px]">Currency</TableHead>
-                                    <TableHead className="w-[140px]">Amount</TableHead>
-                                    <TableHead className="w-[100px] text-right">Action</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {employeesWithLastPayment.map((employee) => (
-                                    <PaymentRow
-                                        key={employee.id}
-                                        employee={employee}
-                                        lastPayment={employee.lastPayment}
-                                        lastSalaryPayment={employee.lastSalaryPayment}
-                                        lastBonusPayment={employee.lastBonusPayment}
-                                        commonRemarks={commonRemarks}
-                                    />
-                                ))}
-                                {employees.length === 0 && (
-                                    <TableRow>
-                                        <TableCell colSpan={9} className="text-center h-24 text-muted-foreground">
-                                            No employees with banking information found.
-                                        </TableCell>
-                                    </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
-                    </div>
-                </CardContent>
-            </Card>
+            <div className="rounded-md border bg-white dark:bg-gray-900">
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Employee</TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead>Bank Details</TableHead>
+                            <TableHead>Last Payment</TableHead>
+                            <TableHead>Type</TableHead>
+                            <TableHead>Remarks / Month</TableHead>
+                            <TableHead>Currency</TableHead>
+                            <TableHead>Amount</TableHead>
+                            <TableHead className="text-right">Action</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {employeesWithLastPayment.map((employee) => (
+                            <PaymentRow
+                                key={employee.id}
+                                employee={employee}
+                                lastPayment={employee.lastPayment}
+                                lastSalaryPayment={employee.lastSalaryPayment}
+                                lastBonusPayment={employee.lastBonusPayment}
+                                commonRemarks={commonRemarks}
+                            />
+                        ))}
+                        {employees.length === 0 && (
+                            <TableRow>
+                                <TableCell colSpan={9} className="text-center h-24 text-muted-foreground">
+                                    No employees with banking information found.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
 
-            {employees.length > 0 && (
-                <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-900">
-                    <CardHeader>
-                        <CardTitle className="text-blue-900 dark:text-blue-100">Payment Information</CardTitle>
-                    </CardHeader>
-                    <CardContent className="text-sm text-blue-800 dark:text-blue-200 space-y-2">
-                        <p>• Default payment period: <strong>{monthYear}</strong></p>
-                        <p>• Green indicator: Employee paid for selected month</p>
-                        <p>• Orange indicator: Payment pending for selected month</p>
-                        <p>• View last payment details in the dedicated column</p>
-                        <p>• Click <strong>"Add"</strong> to create salary slip document</p>
-                    </CardContent>
-                </Card>
-            )}
+
         </div>
     )
 }
