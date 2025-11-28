@@ -25,11 +25,15 @@ export default async function EmployeesPage() {
         orderBy: { name: 'asc' }
     })
 
+    const departments = await prisma.department.findMany({
+        orderBy: { order: 'asc' }
+    })
+
     return (
         <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold">Employees</h1>
-                <AddEmployeeModal managers={managers} />
+                <AddEmployeeModal managers={managers} departments={departments} />
             </div>
 
             <div className="rounded-md border bg-white dark:bg-gray-900">

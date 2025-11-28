@@ -11,13 +11,14 @@ import {
 } from "@/components/ui/dialog"
 import { EmployeeForm } from "./employee-form"
 import { Plus } from "lucide-react"
-import { User } from "@prisma/client"
+import { User, Department } from "@prisma/client"
 
 type AddEmployeeModalProps = {
     managers: User[]
+    departments: Department[]
 }
 
-export function AddEmployeeModal({ managers }: AddEmployeeModalProps) {
+export function AddEmployeeModal({ managers, departments }: AddEmployeeModalProps) {
     const [open, setOpen] = useState(false)
 
     return (
@@ -32,7 +33,7 @@ export function AddEmployeeModal({ managers }: AddEmployeeModalProps) {
                 <DialogHeader>
                     <DialogTitle>Add New Employee</DialogTitle>
                 </DialogHeader>
-                <EmployeeForm managers={managers} onSuccess={() => setOpen(false)} />
+                <EmployeeForm managers={managers} departments={departments} onSuccess={() => setOpen(false)} />
             </DialogContent>
         </Dialog>
     )

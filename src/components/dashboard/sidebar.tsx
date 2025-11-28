@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 import {
     LayoutDashboard,
     User,
+    Users,
     Calendar,
     CircleDollarSign,
     TrendingUp,
@@ -28,6 +29,11 @@ const sidebarItems = [
         title: "Leave",
         href: "/dashboard/leave",
         icon: Calendar,
+    },
+    {
+        title: "Teams",
+        href: "/dashboard/teams",
+        icon: Users,
     },
     {
         title: "Documents",

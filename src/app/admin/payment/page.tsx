@@ -18,11 +18,6 @@ export default async function PaymentPage() {
     const employees = await prisma.user.findMany({
         where: {
             role: 'EMPLOYEE',
-            // Only show employees who have at least some banking information
-            OR: [
-                { accountNumber: { not: null } },
-                { bankName: { not: null } },
-            ]
         },
         orderBy: { name: 'asc' },
         select: {

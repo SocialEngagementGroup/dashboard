@@ -28,6 +28,11 @@ const sidebarItems = [
         icon: Users,
     },
     {
+        title: "Teams",
+        href: "/admin/teams",
+        icon: Users,
+    },
+    {
         title: "Notices",
         href: "/admin/notices",
         icon: FileText,
