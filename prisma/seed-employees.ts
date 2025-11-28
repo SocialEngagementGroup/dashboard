@@ -110,8 +110,8 @@ async function main() {
         })
 
         // Delete tool requests
-        await prisma.tool.deleteMany({
-            where: { requestedById: user.id }
+        await prisma.toolRequest.deleteMany({
+            where: { userId: user.id }
         })
 
         // Delete emergency contacts

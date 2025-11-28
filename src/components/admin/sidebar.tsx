@@ -17,42 +17,62 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-const sidebarItems = [
+const sidebarGroups = [
     {
-        title: "Dashboard",
-        href: "/admin",
-        icon: LayoutDashboard,
+        label: "Overview",
+        items: [
+            {
+                title: "Dashboard",
+                href: "/admin",
+                icon: LayoutDashboard,
+            },
+        ]
     },
     {
-        title: "Employees",
-        href: "/admin/employees",
-        icon: Users,
+        label: "People",
+        items: [
+            {
+                title: "Employees",
+                href: "/admin/employees",
+                icon: Users,
+            },
+            {
+                title: "Teams",
+                href: "/admin/teams",
+                icon: Users,
+            },
+        ]
     },
     {
-        title: "Teams",
-        href: "/admin/teams",
-        icon: Users,
+        label: "Operations",
+        items: [
+            {
+                title: "Notices",
+                href: "/admin/notices",
+                icon: FileText,
+            },
+            {
+                title: "Leaves",
+                href: "/admin/leaves",
+                icon: Calendar,
+            },
+            {
+                title: "Tools",
+                href: "/admin/tools",
+                icon: Wrench,
+            },
+        ]
     },
     {
-        title: "Notices",
-        href: "/admin/notices",
-        icon: FileText,
-    },
-    {
-        title: "Leaves",
-        href: "/admin/leaves",
-        icon: Calendar,
-    },
-    {
-        title: "Payment",
-        href: "/admin/payment",
-        icon: Wallet,
-    },
-    {
-        title: "Tools",
-        href: "/admin/tools",
-        icon: Wrench,
-    },
+        label: "Finance",
+        items: [
+            {
+                title: "Payment",
+                href: "/admin/payment",
+                icon: Wallet,
+            },
+        ]
+    }
 ]
 
 export function AdminSidebar() {
@@ -76,22 +96,31 @@ export function AdminSidebar() {
                     <span className="">SEG Admin Panel</span>
                 </Link>
             </div>
-            <div className="flex-1 overflow-auto py-2">
-                <nav className="grid items-start px-4 text-base font-medium">
-                    {sidebarItems.map((item) => (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            className={cn(
-                                "flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ease-in-out hover:text-white hover:bg-white/15",
-                                pathname === item.href
-                                    ? "bg-white/20 text-white shadow-sm"
-                                    : "text-white/70"
-                            )}
-                        >
-                            <item.icon className="h-5 w-5" />
-                            {item.title}
-                        </Link>
+            <div className="flex-1 overflow-auto py-4">
+                <nav className="grid items-start px-4 text-base font-medium gap-6">
+                    {sidebarGroups.map((group, index) => (
+                        <div key={index} className="space-y-2">
+                            <h3 className="px-3 text-xs font-semibold text-white/50 uppercase tracking-wider">
+                                {group.label}
+                            </h3>
+                            <div className="space-y-1">
+                                {group.items.map((item) => (
+                                    <Link
+                                        key={item.href}
+                                        href={item.href}
+                                        className={cn(
+                                            "flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ease-in-out hover:text-white hover:bg-white/15",
+                                            pathname === item.href
+                                                ? "bg-white/20 text-white shadow-sm"
+                                                : "text-white/70"
+                                        )}
+                                    >
+                                        <item.icon className="h-5 w-5" />
+                                        {item.title}
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
                     ))}
                 </nav>
             </div>

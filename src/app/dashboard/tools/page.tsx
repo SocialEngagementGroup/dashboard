@@ -24,7 +24,7 @@ export default async function EmployeeToolsPage() {
     })
 
     // Transform requests to match the expected format
-    const formattedRequests = requests.map(req => ({
+    const formattedRequests = requests.map((req: typeof requests[number]) => ({
         id: req.id,
         name: req.tool.name,
         url: req.tool.url,

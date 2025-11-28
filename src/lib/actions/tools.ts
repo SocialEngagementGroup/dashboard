@@ -19,13 +19,21 @@ export async function requestTool(formData: FormData) {
     }
 
     try {
-        await prisma.tool.create({
+        // Create the tool first
+        const tool = await prisma.tool.create({
             data: {
                 name,
                 url,
                 description: description || null,
+            },
+        })
+
+        // Then create a tool request for this user
+        await prisma.toolRequest.create({
+            data: {
+                toolId: tool.id,
+                userId: session.user.id,
                 status: "PENDING",
-                requestedById: session.user.id,
             },
         })
 

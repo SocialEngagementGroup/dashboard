@@ -19,47 +19,67 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-const sidebarItems = [
+const sidebarGroups = [
     {
-        title: "Home",
-        href: "/dashboard",
-        icon: LayoutDashboard,
+        label: "Main",
+        items: [
+            {
+                title: "Home",
+                href: "/dashboard",
+                icon: LayoutDashboard,
+            },
+        ]
     },
     {
-        title: "Leave",
-        href: "/dashboard/leave",
-        icon: Calendar,
+        label: "My Work",
+        items: [
+            {
+                title: "Leave",
+                href: "/dashboard/leave",
+                icon: Calendar,
+            },
+            {
+                title: "Tools",
+                href: "/dashboard/tools",
+                icon: Wrench,
+            },
+            {
+                title: "Documents",
+                href: "/dashboard/documents",
+                icon: FileText,
+            },
+        ]
     },
     {
-        title: "Teams",
-        href: "/dashboard/teams",
-        icon: Users,
+        label: "Organization",
+        items: [
+            {
+                title: "Teams",
+                href: "/dashboard/teams",
+                icon: Users,
+            },
+            {
+                title: "Resources",
+                href: "/dashboard/resources",
+                icon: BookOpen,
+            },
+        ]
     },
     {
-        title: "Documents",
-        href: "/dashboard/documents",
-        icon: FileText,
-    },
-    {
-        title: "Tools",
-        href: "/dashboard/tools",
-        icon: Wrench,
-    },
-    {
-        title: "Salary",
-        href: "/dashboard/salary",
-        icon: CircleDollarSign,
-    },
-    {
-        title: "Performance",
-        href: "/dashboard/performance",
-        icon: TrendingUp,
-    },
-    {
-        title: "Resources",
-        href: "/dashboard/resources",
-        icon: BookOpen,
-    },
+        label: "Personal",
+        items: [
+            {
+                title: "Salary",
+                href: "/dashboard/salary",
+                icon: CircleDollarSign,
+            },
+            {
+                title: "Performance",
+                href: "/dashboard/performance",
+                icon: TrendingUp,
+            },
+        ]
+    }
 ]
 
 export function EmployeeSidebar() {
@@ -83,22 +103,31 @@ export function EmployeeSidebar() {
                     <span className="">SEG Dashboard</span>
                 </Link>
             </div>
-            <div className="flex-1 overflow-auto py-2">
-                <nav className="grid items-start px-4 text-base font-medium">
-                    {sidebarItems.map((item) => (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            className={cn(
-                                "flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ease-in-out hover:text-white hover:bg-white/15",
-                                pathname === item.href
-                                    ? "bg-white/20 text-white shadow-sm"
-                                    : "text-white/70"
-                            )}
-                        >
-                            <item.icon className="h-5 w-5" />
-                            {item.title}
-                        </Link>
+            <div className="flex-1 overflow-auto py-4">
+                <nav className="grid items-start px-4 text-base font-medium gap-6">
+                    {sidebarGroups.map((group, index) => (
+                        <div key={index} className="space-y-2">
+                            <h3 className="px-3 text-xs font-semibold text-white/50 uppercase tracking-wider">
+                                {group.label}
+                            </h3>
+                            <div className="space-y-1">
+                                {group.items.map((item) => (
+                                    <Link
+                                        key={item.href}
+                                        href={item.href}
+                                        className={cn(
+                                            "flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ease-in-out hover:text-white hover:bg-white/15",
+                                            pathname === item.href
+                                                ? "bg-white/20 text-white shadow-sm"
+                                                : "text-white/70"
+                                        )}
+                                    >
+                                        <item.icon className="h-5 w-5" />
+                                        {item.title}
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
                     ))}
                 </nav>
             </div>
