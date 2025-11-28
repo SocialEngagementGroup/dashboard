@@ -60,7 +60,7 @@ model User {
   sessions      Session[]
   leaveRequests LeaveRequest[]
   documents     Document[]
-  toolRequests  Tool[]
+  toolRequests  ToolRequest[]
   
   managerId     String?
   manager       User?     @relation("ManagerToEmployee", fields: [managerId], references: [id])
@@ -146,13 +146,27 @@ model Tool {
   description String?
   url         String
   image       String?
-  status      String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  email       String?
+  password    String?
   
-  requestedById String?
-  requestedBy   User?   @relation(fields: [requestedById], references: [id])
+  requests    ToolRequest[]
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model ToolRequest {
+  id        String   @id @default(cuid())
+  toolId    String
+  tool      Tool     @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status    String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([toolId, userId])
 }
 
 model EmergencyContact {

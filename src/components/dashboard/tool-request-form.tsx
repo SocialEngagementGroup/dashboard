@@ -1,81 +1,131 @@
 "use client"
 
 import { useState } from "react"
-import { requestTool } from "@/lib/actions/tools"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import * as z from "zod"
 import { Loader2 } from "lucide-react"
+import { useRouter } from "next/navigation"
+
+import { Button } from "@/components/ui/button"
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { useToast } from "@/hooks/use-toast"
+
+const toolRequestSchema = z.object({
+    name: z.string().min(1, "Tool name is required"),
+    url: z.string().url("Valid URL is required"),
+    description: z.string().optional(),
+})
+
+type ToolRequestFormValues = z.infer<typeof toolRequestSchema>
 
 export function ToolRequestForm() {
+    const router = useRouter()
+    const { toast } = useToast()
     const [isLoading, setIsLoading] = useState(false)
-    const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
+    const form = useForm<ToolRequestFormValues>({
+        resolver: zodResolver(toolRequestSchema),
+        defaultValues: {
+            name: "",
+            url: "",
+            description: "",
+        },
+    })
+
+    async function onSubmit(data: ToolRequestFormValues) {
         setIsLoading(true)
-        setMessage(null)
+        try {
+            const response = await fetch("/api/tools", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            })
 
-        const formData = new FormData(e.currentTarget)
-        const result = await requestTool(formData)
+            if (!response.ok) {
+                throw new Error("Failed to submit request")
+            }
 
-        if (result.success) {
-            setMessage({ type: 'success', text: 'Tool request submitted successfully!' })
-            e.currentTarget.reset()
-        } else {
-            setMessage({ type: 'error', text: result.error || 'Failed to submit request' })
+            toast({
+                title: "Success",
+                description: "Your tool request has been submitted",
+            })
+
+            form.reset()
+            router.refresh()
+        } catch (error) {
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: "Failed to submit request. Please try again.",
+            })
+        } finally {
+            setIsLoading(false)
         }
-
-        setIsLoading(false)
     }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-                <Label htmlFor="name">Tool Name *</Label>
-                <Input
-                    id="name"
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <FormField
+                    control={form.control}
                     name="name"
-                    placeholder="e.g., Figma, Adobe Creative Cloud"
-                    required
-                    disabled={isLoading}
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Tool Name</FormLabel>
+                            <FormControl>
+                                <Input placeholder="e.g., Figma, Jira" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
                 />
-            </div>
-
-            <div className="space-y-2">
-                <Label htmlFor="url">Tool URL *</Label>
-                <Input
-                    id="url"
+                <FormField
+                    control={form.control}
                     name="url"
-                    type="url"
-                    placeholder="https://..."
-                    required
-                    disabled={isLoading}
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Website URL</FormLabel>
+                            <FormControl>
+                                <Input placeholder="https://example.com" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
                 />
-            </div>
-
-            <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                    id="description"
+                <FormField
+                    control={form.control}
                     name="description"
-                    placeholder="Why do you need this tool?"
-                    rows={3}
-                    disabled={isLoading}
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Description (Optional)</FormLabel>
+                            <FormControl>
+                                <Textarea
+                                    placeholder="Why do you need this tool?"
+                                    className="resize-none"
+                                    {...field}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
                 />
-            </div>
-
-            {message && (
-                <p className={`text-sm ${message.type === 'success' ? 'text-green-600' : 'text-red-500'}`}>
-                    {message.text}
-                </p>
-            )}
-
-            <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Submit Request
-            </Button>
-        </form>
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Submit Request
+                </Button>
+            </form>
+        </Form>
     )
 }
