@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma"
+import { Document as PrismaDocument } from "@prisma/client"
 import { auth } from "@/auth"
 
 export const dynamic = 'force-dynamic'
@@ -31,7 +32,7 @@ export default async function DocumentsPage() {
 
     return (
         <div className="flex flex-col gap-6">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">Document Management</h1>
+            <h1 className="text-3xl font-bold bg-linear-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">Document Management</h1>
 
             <Tabs defaultValue="salary" className="w-full">
                 <TabsList>
@@ -56,7 +57,7 @@ export default async function DocumentsPage() {
     )
 }
 
-function DocumentList({ documents, emptyMessage }: { documents: any[], emptyMessage: string }) {
+function DocumentList({ documents, emptyMessage }: { documents: PrismaDocument[], emptyMessage: string }) {
     if (documents.length === 0) {
         return (
             <div className="text-center py-12 text-muted-foreground border rounded-lg border-dashed">

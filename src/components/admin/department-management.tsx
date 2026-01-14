@@ -120,8 +120,9 @@ export function DepartmentManagement({ departments: initialDepartments }: Depart
             router.refresh()
             setIsDeleteDialogOpen(false)
             setSelectedDepartment(null)
-        } catch (error: any) {
-            toast.error(error.message || "Failed to delete department")
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : "Failed to delete department"
+            toast.error(errorMessage)
             console.error(error)
         } finally {
             setIsSubmitting(false)
@@ -279,7 +280,7 @@ export function DepartmentManagement({ departments: initialDepartments }: Depart
                     <AlertDialogHeader>
                         <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            This will delete the "{selectedDepartment?.name}" department. This action cannot be undone.
+                            This will delete the &quot;{selectedDepartment?.name}&quot; department. This action cannot be undone.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

@@ -60,8 +60,15 @@ interface PaymentRecord {
     currency?: string
 }
 
+interface RawDocument {
+    id: string
+    title: string
+    url: string
+    createdAt: string | Date
+}
+
 interface SalaryHistoryTableProps {
-    documents: any[]
+    documents: RawDocument[]
     isAdmin?: boolean
 }
 

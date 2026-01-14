@@ -308,7 +308,7 @@ export default async function ViewEmployeePage({
                                 </CardHeader>
                                 <CardContent className="space-y-3">
                                     {employee.emergencyContacts && employee.emergencyContacts.length > 0 ? (
-                                        employee.emergencyContacts.map((contact: any) => (
+                                        employee.emergencyContacts.map((contact) => (
                                             <div key={contact.id} className="flex items-start gap-3 p-2 rounded bg-muted/50">
                                                 <div className="h-8 w-8 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center shrink-0">
                                                     <Phone className="h-4 w-4 text-red-600 dark:text-red-400" />
@@ -351,7 +351,7 @@ export default async function ViewEmployeePage({
                         <CardContent>
                             {employee.documents && employee.documents.length > 0 ? (
                                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                                    {employee.documents.map((doc: any) => (
+                                    {employee.documents.map((doc) => (
                                         <div key={doc.id} className="flex items-start gap-3 p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors">
                                             <div className="h-10 w-10 rounded bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center shrink-0">
                                                 <FileText className="h-5 w-5 text-blue-600 dark:text-blue-400" />

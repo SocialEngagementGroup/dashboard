@@ -40,10 +40,10 @@ export default async function DashboardPage() {
         <div className="flex flex-col gap-6 fade-in">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+                    <h1 className="text-3xl font-bold bg-linear-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
                         Welcome Back
                     </h1>
-                    <p className="text-muted-foreground mt-1">Here's what's happening today</p>
+                    <p className="text-muted-foreground mt-1">Here&apos;s what&apos;s happening today</p>
                 </div>
                 <EstClock />
             </div>
@@ -102,7 +102,7 @@ export default async function DashboardPage() {
                         Company Notices
                     </h2>
                     <div className="space-y-4">
-                        {notices.map((notice: any) => (
+                        {notices.map((notice) => (
                             <Card key={notice.id} className={`hover:shadow-md transition-all duration-200 ${notice.isPinned ? "border-l-4 border-l-blue-500 bg-blue-50/50 dark:bg-blue-950/20" : ""}`}>
                                 <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
                                     <div className="space-y-1 flex-1">
@@ -138,15 +138,15 @@ export default async function DashboardPage() {
                 <div className="space-y-4">
                     <h2 className="text-xl font-semibold flex items-center gap-2">
                         <Users className="h-5 w-5" />
-                        Who's Out Today
+                        Who&apos;s Out Today
                     </h2>
                     <Card className="hover:shadow-md transition-shadow duration-200">
                         <CardContent className="pt-6">
                             {leaves.length > 0 ? (
                                 <ul className="space-y-4">
-                                    {leaves.map((leave: any) => (
+                                    {leaves.map((leave) => (
                                         <li key={leave.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                                            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-sm font-semibold text-white shadow-md">
+                                            <div className="h-10 w-10 rounded-full bg-linear-to-br from-blue-400 to-purple-500 flex items-center justify-center text-sm font-semibold text-white shadow-md">
                                                 {leave.user.name?.charAt(0)}
                                             </div>
                                             <div className="flex-1">

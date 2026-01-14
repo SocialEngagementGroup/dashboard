@@ -1,7 +1,7 @@
 
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/auth"
-import { User as PrismaUser } from "@prisma/client"
+import { User as PrismaUser, EmergencyContact } from "@prisma/client"
 
 export const dynamic = 'force-dynamic'
 
@@ -39,7 +39,7 @@ export default async function ProfilePage() {
     if (!session?.user) return null
 
     // Try to find user by ID first, then by email as fallback
-    let user: (PrismaUser & { manager: PrismaUser | null, emergencyContacts: any[] }) | null = null
+    let user: (PrismaUser & { manager: PrismaUser | null, emergencyContacts: EmergencyContact[] }) | null = null
     if (session.user.id) {
         user = await prisma.user.findUnique({
             where: { id: session.user.id },
@@ -156,7 +156,7 @@ export default async function ProfilePage() {
                                 <Droplet className="h-4 w-4 text-muted-foreground" />
                                 <div>
                                     <p className="text-sm text-muted-foreground">Blood Group</p>
-                                    <p className="font-medium text-red-500 font-bold">{user.bloodGroup || 'Not set'}</p>
+                                    <p className="text-red-500 font-bold">{user.bloodGroup || 'Not set'}</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-3">
@@ -237,7 +237,7 @@ export default async function ProfilePage() {
                     <CardContent>
                         {user.emergencyContacts && user.emergencyContacts.length > 0 ? (
                             <div className="space-y-4">
-                                {user.emergencyContacts.map((contact: any) => (
+                                {user.emergencyContacts.map((contact) => (
                                     <div key={contact.id} className="flex items-center justify-between p-4 bg-red-50 dark:bg-red-950/20 rounded-lg border border-red-100 dark:border-red-900">
                                         <div className="flex items-center gap-4">
                                             <div className="h-12 w-12 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center">

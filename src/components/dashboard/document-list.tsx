@@ -9,7 +9,14 @@ import { Button } from "@/components/ui/button"
 import { FileText, Download } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 
-export function DocumentList({ documents, emptyMessage }: { documents: any[], emptyMessage: string }) {
+interface Document {
+    id: string
+    title: string
+    url: string
+    createdAt: string | Date
+}
+
+export function DocumentList({ documents, emptyMessage }: { documents: Document[], emptyMessage: string }) {
     if (documents.length === 0) {
         return (
             <div className="text-center py-16 text-muted-foreground border-2 border-dashed rounded-lg">

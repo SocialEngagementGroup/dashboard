@@ -40,7 +40,7 @@ export default async function LeaveRequestsPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {requests.map((request: any) => (
+                        {requests.map((request) => (
                             <TableRow key={request.id}>
                                 <TableCell>
                                     <div className="flex flex-col">

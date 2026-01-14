@@ -34,7 +34,7 @@ export default async function LeavePage() {
     return (
         <div className="flex flex-col gap-6 fade-in">
             <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+                <h1 className="text-3xl font-bold bg-linear-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
                     Leave Management
                 </h1>
                 <p className="text-muted-foreground mt-1">Manage your leave requests and view history</p>
@@ -110,7 +110,7 @@ export default async function LeavePage() {
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {requests.map((request: any) => (
+                                        {requests.map((request) => (
                                             <TableRow key={request.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                                                 <TableCell className="font-medium">{request.type}</TableCell>
                                                 <TableCell className="flex items-center gap-1 text-sm text-muted-foreground">

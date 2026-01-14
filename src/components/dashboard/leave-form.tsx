@@ -1,6 +1,6 @@
 "use client"
 
-import { useActionState, useState, useEffect } from "react"
+import { useActionState, useState, useMemo } from "react"
 import { applyForLeave, LeaveFormState } from "@/lib/actions/apply-leave"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -27,18 +27,14 @@ export function LeaveApplicationForm() {
     const initialState: LeaveFormState = { message: undefined, errors: {} }
     const [state, dispatch, isPending] = useActionState(applyForLeave, initialState)
     const [date, setDate] = useState<DateRange | undefined>()
-    const [duration, setDuration] = useState<number>(0)
-
-    useEffect(() => {
+    
+    const duration = useMemo(() => {
         if (date?.from && date?.to) {
-            const days = calculateBusinessDays(date.from, date.to)
-            setDuration(days)
+            return calculateBusinessDays(date.from, date.to)
         } else if (date?.from) {
-            const days = calculateBusinessDays(date.from, date.from)
-            setDuration(days)
-        } else {
-            setDuration(0)
+            return calculateBusinessDays(date.from, date.from)
         }
+        return 0
     }, [date])
 
     return (
