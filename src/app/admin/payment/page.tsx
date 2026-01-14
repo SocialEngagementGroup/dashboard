@@ -38,7 +38,7 @@ export default async function PaymentPage() {
 
     // Fetch last payment and last salary for each employee
     const employeesWithLastPayment = await Promise.all(
-        employees.map(async (employee) => {
+        employees.map(async (employee: any) => {
             // Get the very last payment (could be Salary or Bonus)
             const lastDocument = await prisma.document.findFirst({
                 where: {
@@ -141,7 +141,7 @@ export default async function PaymentPage() {
 
     // Extract remarks from titles (format: "Bonus - Remark - Amount Currency")
     const commonRemarks = allDocuments
-        .map((doc) => {
+        .map((doc: any) => {
             // Split by " - "
             const parts = doc.title.split(' - ')
             // parts[0] is "Bonus", parts[1] is Remark, parts[2] is Amount (optional/new)
