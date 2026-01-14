@@ -33,8 +33,8 @@ export default async function DashboardPage() {
         where: { userId }
     }) : []
 
-    const pendingLeaves = userLeaves.filter(l => l.status === 'PENDING').length
-    const approvedLeaves = userLeaves.filter(l => l.status === 'APPROVED').length
+    const pendingLeaves = userLeaves.filter((l: any) => l.status === 'PENDING').length
+    const approvedLeaves = userLeaves.filter((l: any) => l.status === 'APPROVED').length
 
     return (
         <div className="flex flex-col gap-6 fade-in">

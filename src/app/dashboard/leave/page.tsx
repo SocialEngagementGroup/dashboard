@@ -27,9 +27,9 @@ export default async function LeavePage() {
         orderBy: { createdAt: 'desc' }
     })
 
-    const pendingCount = requests.filter(r => r.status === 'PENDING').length
-    const approvedCount = requests.filter(r => r.status === 'APPROVED').length
-    const rejectedCount = requests.filter(r => r.status === 'REJECTED').length
+    const pendingCount = requests.filter((r: any) => r.status === 'PENDING').length
+    const approvedCount = requests.filter((r: any) => r.status === 'APPROVED').length
+    const rejectedCount = requests.filter((r: any) => r.status === 'REJECTED').length
 
     return (
         <div className="flex flex-col gap-6 fade-in">
