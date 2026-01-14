@@ -121,7 +121,7 @@ export async function getAvailableTools(userId: string) {
         })
 
         // Transform to include status for the current user
-        const toolsWithStatus = tools.map(tool => ({
+        const toolsWithStatus = tools.map((tool: any) => ({
             ...tool,
             // Hide sensitive info if not approved
             email: tool.requests[0]?.status === "APPROVED" ? tool.email : null,
