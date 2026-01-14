@@ -48,7 +48,7 @@ export default async function TeamsPage() {
 
             {/* Department Sections */}
             <div className="space-y-4">
-                {departments.map((department) => (
+                {departments.map((department: any) => (
                     <DepartmentSection
                         key={department.id}
                         department={department.name}

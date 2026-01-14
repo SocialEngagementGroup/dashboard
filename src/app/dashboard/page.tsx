@@ -102,7 +102,7 @@ export default async function DashboardPage() {
                         Company Notices
                     </h2>
                     <div className="space-y-4">
-                        {notices.map((notice) => (
+                        {notices.map((notice: any) => (
                             <Card key={notice.id} className={`hover:shadow-md transition-all duration-200 ${notice.isPinned ? "border-l-4 border-l-blue-500 bg-blue-50/50 dark:bg-blue-950/20" : ""}`}>
                                 <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
                                     <div className="space-y-1 flex-1">
@@ -144,7 +144,7 @@ export default async function DashboardPage() {
                         <CardContent className="pt-6">
                             {leaves.length > 0 ? (
                                 <ul className="space-y-4">
-                                    {leaves.map((leave) => (
+                                    {leaves.map((leave: any) => (
                                         <li key={leave.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                                             <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-sm font-semibold text-white shadow-md">
                                                 {leave.user.name?.charAt(0)}

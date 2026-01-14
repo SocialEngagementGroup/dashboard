@@ -141,7 +141,7 @@ export default async function PaymentPage() {
 
     // Extract remarks from titles (format: "Bonus - Remark - Amount Currency")
     const commonRemarks = allDocuments
-        .map(doc => {
+        .map((doc: any) => {
             // Split by " - "
             const parts = doc.title.split(' - ')
             // parts[0] is "Bonus", parts[1] is Remark, parts[2] is Amount (optional/new)
@@ -177,7 +177,7 @@ export default async function PaymentPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {employeesWithLastPayment.map((employee) => (
+                        {employeesWithLastPayment.map((employee: any) => (
                             <PaymentRow
                                 key={employee.id}
                                 employee={employee}

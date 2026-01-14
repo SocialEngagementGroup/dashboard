@@ -44,7 +44,7 @@ export default async function EmployeeTeamsPage() {
 
             {/* Department Sections */}
             <div className="space-y-4">
-                {departments.map((department) => (
+                {departments.map((department: any) => (
                     <EmployeeDepartmentSection
                         key={department.id}
                         department={department.name}

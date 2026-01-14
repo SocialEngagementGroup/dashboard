@@ -110,7 +110,7 @@ export default async function LeavePage() {
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {requests.map((request) => (
+                                        {requests.map((request: any) => (
                                             <TableRow key={request.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                                                 <TableCell className="font-medium">{request.type}</TableCell>
                                                 <TableCell className="flex items-center gap-1 text-sm text-muted-foreground">
