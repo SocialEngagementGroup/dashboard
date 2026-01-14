@@ -26,9 +26,9 @@ import { updateProfile } from "@/app/actions/profile"
 import { Pencil, Loader2, Plus, Trash2 } from "lucide-react"
 import { toast } from "sonner"
 
-type UserWithRelations = User & {
-    emergencyContacts: EmergencyContact[]
-}
+// type UserWithRelations = User & {
+//     emergencyContacts: EmergencyContact[]
+// }
 
 export function ProfileEditForm({ user }: { user: any }) {
     const [open, setOpen] = useState(false)
