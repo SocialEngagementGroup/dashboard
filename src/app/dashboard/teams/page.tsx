@@ -26,7 +26,7 @@ export default async function EmployeeTeamsPage() {
     })
 
     // Group users by department
-    const usersByDepartment = departments.reduce((acc, dept) => {
+    const usersByDepartment = departments.reduce((acc: any, dept: any) => {
         acc[dept.name] = users.filter(u => u.department === dept.name)
         return acc
     }, {} as Record<string, typeof users>)
