@@ -150,10 +150,10 @@ export default async function PaymentPage() {
             }
             return ''
         })
-        .filter(remark => remark.trim() !== '')
+        .filter((remark: any) => remark.trim() !== '')
         .sort()
         // Remove duplicates again after extraction
-        .filter((item, index, array) => array.indexOf(item) === index)
+        .filter((item: any, index: any, array: any) => array.indexOf(item) === index)
 
     return (
         <div className="flex flex-col gap-6">
