@@ -1,14 +1,14 @@
 "use client"
 
 import { useState } from "react"
-import { User } from "@prisma/client"
+// import { User } from "@prisma/client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Building2, CreditCard, MapPin, Hash, Globe, UserCircle, Pencil } from "lucide-react"
 import { BankingForm } from "./banking-form"
 
-export function BankingSection({ user }: { user: User }) {
+export function BankingSection({ user }: { user: any }) {
     const [open, setOpen] = useState(false)
 
     return (

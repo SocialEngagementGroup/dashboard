@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { User, EmergencyContact } from "@prisma/client"
+// import { User, EmergencyContact } from "@prisma/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -30,10 +30,10 @@ type UserWithRelations = User & {
     emergencyContacts: EmergencyContact[]
 }
 
-export function ProfileEditForm({ user }: { user: UserWithRelations }) {
+export function ProfileEditForm({ user }: { user: any }) {
     const [open, setOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
-    const [contacts, setContacts] = useState<Partial<EmergencyContact>[]>(
+    const [contacts, setContacts] = useState<any[]>(
         user.emergencyContacts?.length > 0
             ? user.emergencyContacts
             : [{ name: "", phone: "", relation: "" }]
@@ -49,7 +49,7 @@ export function ProfileEditForm({ user }: { user: UserWithRelations }) {
         setContacts(newContacts)
     }
 
-    const handleContactChange = (index: number, field: keyof EmergencyContact, value: string) => {
+    const handleContactChange = (index: number, field: any, value: string) => {
         const newContacts = [...contacts]
         newContacts[index] = { ...newContacts[index], [field]: value }
         setContacts(newContacts)

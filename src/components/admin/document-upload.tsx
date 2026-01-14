@@ -12,12 +12,12 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { Document } from "@prisma/client"
+// import { Document } from "@prisma/client"
 import { Trash2, FileText, Download } from "lucide-react"
 
 type DocumentUploadProps = {
     userId: string
-    documents: Document[]
+    documents: any[]
 }
 
 export function DocumentUpload({ userId, documents }: DocumentUploadProps) {
@@ -79,7 +79,7 @@ export function DocumentUpload({ userId, documents }: DocumentUploadProps) {
                     <p className="text-sm text-muted-foreground">No documents uploaded yet.</p>
                 ) : (
                     <div className="grid gap-4 md:grid-cols-2">
-                        {documents.map((doc) => (
+                        {documents.map((doc: any) => (
                             <div key={doc.id} className="flex items-center justify-between rounded-lg border p-3">
                                 <div className="flex items-center gap-3">
                                     <FileText className="h-5 w-5 text-blue-500" />

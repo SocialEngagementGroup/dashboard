@@ -12,7 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { User, Department } from "@prisma/client"
+// import { User, Department } from "@prisma/client"
 import Link from "next/link"
 import { Plus } from "lucide-react"
 import {
@@ -29,9 +29,9 @@ import { toast } from "sonner"
 
 
 type EmployeeFormProps = {
-    employee?: User
-    managers: User[]
-    departments: Department[]
+    employee?: any
+    managers: any[]
+    departments: any[]
     onSuccess?: () => void
 }
 
@@ -135,7 +135,7 @@ export function EmployeeForm({ employee, managers, departments, onSuccess }: Emp
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="none">None</SelectItem>
-                                        {managers.map((manager) => (
+                                        {managers.map((manager: any) => (
                                             <SelectItem key={manager.id} value={manager.id}>
                                                 {manager.name}
                                             </SelectItem>
@@ -172,7 +172,7 @@ export function EmployeeForm({ employee, managers, departments, onSuccess }: Emp
                                                 <SelectValue placeholder="Select department" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {departments.map((dept) => (
+                                                {departments.map((dept: any) => (
                                                     <SelectItem key={dept.id} value={dept.name}>
                                                         {dept.name}
                                                     </SelectItem>

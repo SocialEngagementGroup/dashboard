@@ -1,14 +1,14 @@
 "use client"
 
 import { useState } from "react"
-import { User } from "@prisma/client"
+// import { User } from "@prisma/client"
 import { Camera, Upload } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-export function ProfilePhotoUpload({ user }: { user: User }) {
+export function ProfilePhotoUpload({ user }: { user: any }) {
     const [open, setOpen] = useState(false)
     const [imageUrl, setImageUrl] = useState(user.image || "")
     const [isHovered, setIsHovered] = useState(false)

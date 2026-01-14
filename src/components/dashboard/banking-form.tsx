@@ -5,10 +5,10 @@ import { updateBankingDetails, BankingFormState } from "@/lib/actions/banking"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { User } from "@prisma/client"
+// import { User } from "@prisma/client"
 import { Building2, CreditCard, MapPin, Hash, Globe, UserCircle } from "lucide-react"
 
-export function BankingForm({ user, onSuccess, onCancel }: { user: User; onSuccess?: () => void; onCancel?: () => void }) {
+export function BankingForm({ user, onSuccess, onCancel }: { user: any; onSuccess?: () => void; onCancel?: () => void }) {
     const initialState: BankingFormState = { message: undefined, errors: {} }
     const [state, dispatch, isPending] = useActionState(updateBankingDetails, initialState)
 

@@ -11,11 +11,11 @@ import {
 } from "@/components/ui/dialog"
 import { EmployeeForm } from "./employee-form"
 import { Plus } from "lucide-react"
-import { User, Department } from "@prisma/client"
+// import { User, Department } from "@prisma/client"
 
 type AddEmployeeModalProps = {
-    managers: User[]
-    departments: Department[]
+    managers: any[]
+    departments: any[]
 }
 
 export function AddEmployeeModal({ managers, departments }: AddEmployeeModalProps) {

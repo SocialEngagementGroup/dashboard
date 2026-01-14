@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma"
-import { Document as PrismaDocument } from "@prisma/client"
+// import { Document as PrismaDocument } from "@prisma/client"
 import { auth } from "@/auth"
 
 export const dynamic = 'force-dynamic'
@@ -57,7 +57,7 @@ export default async function DocumentsPage() {
     )
 }
 
-function DocumentList({ documents, emptyMessage }: { documents: PrismaDocument[], emptyMessage: string }) {
+function DocumentList({ documents, emptyMessage }: { documents: any[], emptyMessage: string }) {
     if (documents.length === 0) {
         return (
             <div className="text-center py-12 text-muted-foreground border rounded-lg border-dashed">
@@ -68,7 +68,7 @@ function DocumentList({ documents, emptyMessage }: { documents: PrismaDocument[]
 
     return (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {documents.map((doc) => (
+            {documents.map((doc: any) => (
                 <Card key={doc.id}>
                     <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
                         <div className="space-y-1">

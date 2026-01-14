@@ -1,7 +1,7 @@
 
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/auth"
-import { User as PrismaUser, EmergencyContact } from "@prisma/client"
+// import { User as PrismaUser, EmergencyContact } from "@prisma/client"
 
 export const dynamic = 'force-dynamic'
 
@@ -34,7 +34,7 @@ export default async function AdminProfilePage() {
     if (!session?.user) return null
 
     // Try to find user by ID first, then by email as fallback
-    let user: (PrismaUser & { manager: PrismaUser | null, emergencyContacts: EmergencyContact[] }) | null = null
+    let user: any = null
     if (session.user.id) {
         user = await prisma.user.findUnique({
             where: { id: session.user.id },
@@ -230,7 +230,7 @@ export default async function AdminProfilePage() {
                     <CardContent>
                         {user.emergencyContacts && user.emergencyContacts.length > 0 ? (
                             <div className="space-y-4">
-                                {user.emergencyContacts.map((contact) => (
+                                {user.emergencyContacts.map((contact: any) => (
                                     <div key={contact.id} className="flex items-center justify-between p-4 bg-red-50 dark:bg-red-950/20 rounded-lg border border-red-100 dark:border-red-900">
                                         <div className="flex items-center gap-4">
                                             <div className="h-12 w-12 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center">
