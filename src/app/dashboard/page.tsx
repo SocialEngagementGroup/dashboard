@@ -102,7 +102,7 @@ export default async function DashboardPage() {
                         Company Notices
                     </h2>
                     <div className="space-y-4">
-                        {notices.map((notice) => (
+                        {notices.map((notice: any) => (
                             <Card key={notice.id} className={`hover:shadow-md transition-all duration-200 ${notice.isPinned ? "border-l-4 border-l-blue-500 bg-blue-50/50 dark:bg-blue-950/20" : ""}`}>
                                 <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
                                     <div className="space-y-1 flex-1">
