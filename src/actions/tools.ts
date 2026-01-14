@@ -2,7 +2,7 @@
 
 import { prisma as db } from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
-import { Tool, ToolRequest } from "@prisma/client"
+
 
 // Admin Actions
 
@@ -122,7 +122,7 @@ export async function getAvailableTools(userId: string) {
         })
 
         // Transform to include status for the current user
-        const toolsWithStatus = tools.map((tool: Tool & { requests: ToolRequest[] }) => ({
+        const toolsWithStatus = tools.map((tool: any) => ({
             ...tool,
             // Hide sensitive info if not approved
             email: tool.requests[0]?.status === "APPROVED" ? tool.email : null,
