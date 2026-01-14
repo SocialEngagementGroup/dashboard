@@ -144,7 +144,7 @@ export default async function DashboardPage() {
                         <CardContent className="pt-6">
                             {leaves.length > 0 ? (
                                 <ul className="space-y-4">
-                                    {leaves.map((leave) => (
+                                    {leaves.map((leave: any) => (
                                         <li key={leave.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                                             <div className="h-10 w-10 rounded-full bg-linear-to-br from-blue-400 to-purple-500 flex items-center justify-center text-sm font-semibold text-white shadow-md">
                                                 {leave.user.name?.charAt(0)}

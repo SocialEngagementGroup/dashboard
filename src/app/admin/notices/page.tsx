@@ -36,7 +36,7 @@ export default async function NoticesPage() {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {notices.map((notice) => (
+                {notices.map((notice: any) => (
                     <Card key={notice.id} className={notice.isPinned ? "border-blue-500" : ""}>
                         <CardHeader className="flex flex-row items-start justify-between space-y-0">
                             <div className="space-y-1">

@@ -177,7 +177,7 @@ export default async function PaymentPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {employeesWithLastPayment.map((employee) => (
+                        {employeesWithLastPayment.map((employee: any) => (
                             <PaymentRow
                                 key={employee.id}
                                 employee={employee}
