@@ -26,9 +26,9 @@ export default async function DocumentsPage() {
         orderBy: { createdAt: 'desc' }
     })
 
-    const salarySlips = documents.filter(d => d.type === 'SALARY_SLIP')
-    const performanceReviews = documents.filter(d => d.type === 'PERFORMANCE_REVIEW')
-    const sops = documents.filter(d => d.type === 'SOP')
+    const salarySlips = documents.filter((d: any) => d.type === 'SALARY_SLIP')
+    const performanceReviews = documents.filter((d: any) => d.type === 'PERFORMANCE_REVIEW')
+    const sops = documents.filter((d: any) => d.type === 'SOP')
 
     return (
         <div className="flex flex-col gap-6">
