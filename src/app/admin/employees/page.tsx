@@ -48,7 +48,7 @@ export default async function EmployeesPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {employees.map((employee) => (
+                        {employees.map((employee: any) => (
                             <TableRow key={employee.id}>
                                 <TableCell>
                                     <div className="flex flex-col">
