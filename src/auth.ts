@@ -19,11 +19,18 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             async authorize(credentials) {
                 if (!credentials?.email) return null
 
+                console.log(`[Auth] Credentials email received: ${credentials.email}`)
+
                 const user = await prisma.user.findUnique({
                     where: { email: credentials.email as string }
                 })
 
-                if (!user) return null
+                if (!user) {
+                    console.log(`[Auth] User found: false`)
+                    return null
+                }
+
+                console.log(`[Auth] User found: true, Role: ${user.role}`)
 
                 return {
                     id: user.id,
@@ -49,8 +56,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                 // 2. Verified Email Check
                 // Google profiles usually have email_verified, but let's check profile data if available
                 if (profile?.email_verified === false) {
-                     console.log(`Access denied: ${email} is not a verified Google account.`)
-                     return false
+                    console.log(`Access denied: ${email} is not a verified Google account.`)
+                    return false
                 }
 
                 // 3. User Existence Check
@@ -71,7 +78,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                         data: { role: "ADMIN" },
                     })
                 }
-                
+
                 return true
             }
             // For credentials provider or others, allow default behavior (which runs authorize)

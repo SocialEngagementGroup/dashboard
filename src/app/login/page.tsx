@@ -16,8 +16,11 @@ export default function LoginPage() {
                         <p className="font-semibold text-blue-900">Test Accounts:</p>
                         <div className="space-y-1 text-blue-700">
                             <p>👨‍💼 Admin: <span className="font-mono">admin@company.com</span></p>
-                            <p>👤 Employee: <span className="font-mono">john.doe@company.com</span></p>
+                            <p>👤 Employee (example): <span className="font-mono">tawhid@socialengagementgroup.com</span></p>
                         </div>
+                        <p className="mt-2 text-xs text-blue-600 italic border-t border-blue-100 pt-2">
+                            Employees can log in using their own company email (any seeded employee email works).
+                        </p>
                     </div>
                 </CardContent>
             </Card>
