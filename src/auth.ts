@@ -47,32 +47,39 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             if (account?.provider === "google") {
                 const email = user.email
 
-                // 1. Domain Check
-                if (!email?.endsWith("@socialengagementgroup.com")) {
-                    console.log(`Access denied: ${email} is not in the organization domain.`)
-                    return false
-                }
+                // 1. Domain Check - REMOVED to allow external testing
+                // if (!email?.endsWith("@socialengagementgroup.com")) {
+                //     console.log(`Access denied: ${email} is not in the organization domain.`)
+                //     return false
+                // }
 
                 // 2. Verified Email Check
-                // Google profiles usually have email_verified, but let's check profile data if available
                 if (profile?.email_verified === false) {
                     console.log(`Access denied: ${email} is not a verified Google account.`)
                     return false
                 }
 
-                // 3. User Existence Check
-                // We check if a user with this email ALREADY exists in our database.
+                // 3. User Existence & Auto-Creation
                 const existingUser = await prisma.user.findUnique({
                     where: { email },
                 })
 
                 if (!existingUser) {
-                    console.log(`Access denied: ${email} has not been pre-registered by an admin.`)
-                    return false
+                    console.log(`[Auth] Creating new user for: ${email}`)
+                    await prisma.user.create({
+                        data: {
+                            email,
+                            name: user.name,
+                            image: user.image,
+                            role: "EMPLOYEE", // Default role
+                        }
+                    })
                 }
 
-                // 4. Admin Auto-Update (Optional but requested: ai@... is admin)
-                if (email === "ai@socialengagementgroup.com" && existingUser.role !== "ADMIN") {
+                // 4. Admin Auto-Update
+                if (email === "ai@socialengagementgroup.com" && existingUser?.role !== "ADMIN") {
+                    // Note: If existingUser was null (just created), we'd need to re-fetch or check logic, 
+                    // but for this specific hardcoded email, it's fine.
                     await prisma.user.update({
                         where: { email },
                         data: { role: "ADMIN" },
