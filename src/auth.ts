@@ -47,11 +47,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             if (account?.provider === "google") {
                 const email = user.email
 
-                // 1. Domain Check - REMOVED to allow external testing
-                // if (!email?.endsWith("@socialengagementgroup.com")) {
-                //     console.log(`Access denied: ${email} is not in the organization domain.`)
-                //     return false
-                // }
+                if (!email) {
+                    console.log("Access denied: No email provided by Google.")
+                    return false
+                }
 
                 // 2. Verified Email Check
                 if (profile?.email_verified === false) {
