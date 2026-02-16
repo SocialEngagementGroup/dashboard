@@ -89,7 +89,7 @@ export function LoginForm() {
                 className="w-full"
                 onClick={() => {
                     setLoadingProvider("google")
-                    signIn("google", { callbackUrl: "/dashboard" })
+                    signIn("google", { callbackUrl: "/auth-callback" })
                 }}
                 disabled={loadingProvider !== null}
             >

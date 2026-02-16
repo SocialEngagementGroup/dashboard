@@ -65,30 +65,55 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
                 if (!existingUser) {
                     console.log(`[Auth] Creating new user for: ${email}`)
+                }
+
+                // 4. Admin Auto-Update Logic
+                const adminEmails = process.env.ADMIN_EMAILS?.split(",").map(e => e.trim()) || [];
+                const isAdminEmail = email && adminEmails.includes(email);
+
+                if (!existingUser) {
                     await prisma.user.create({
                         data: {
                             email,
                             name: user.name,
                             image: user.image,
-                            role: "EMPLOYEE", // Default role
+                            role: isAdminEmail ? "ADMIN" : "EMPLOYEE",
                         }
-                    })
-                }
-
-                // 4. Admin Auto-Update
-                if (email === "ai@socialengagementgroup.com" && existingUser?.role !== "ADMIN") {
-                    // Note: If existingUser was null (just created), we'd need to re-fetch or check logic, 
-                    // but for this specific hardcoded email, it's fine.
-                    await prisma.user.update({
-                        where: { email },
-                        data: { role: "ADMIN" },
                     })
                 }
 
                 return true
             }
-            // For credentials provider or others, allow default behavior (which runs authorize)
             return true
+        },
+        async jwt({ token, user }) {
+            // This runs on sign-in (user is present) and on subsequent requests (user is null)
+            if (user) {
+                const email = user.email;
+
+                // 1. Use the role from the user object (for credentials provider)
+                if ((user as any).role) {
+                    token.role = (user as any).role;
+                }
+                // 2. Fetch from DB for Google/other providers or if role is missing
+                else if (email) {
+                    const dbUser = await prisma.user.findUnique({
+                        where: { email },
+                        select: { role: true }
+                    });
+                    if (dbUser) token.role = dbUser.role;
+                }
+            }
+            return token;
+        },
+        async session({ session, token }) {
+            if (session.user && token.sub) {
+                session.user.id = token.sub;
+            }
+            if (session.user && token.role) {
+                session.user.role = token.role as string;
+            }
+            return session;
         },
     }
 })
