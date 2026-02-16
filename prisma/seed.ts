@@ -105,7 +105,7 @@ async function main() {
     console.log('Departments seeded.')
 
     // 2. Seed Admin User
-    const adminEmail = 'admin@company.com'
+    const adminEmail = 'ai@socialengagementgroup.com'
     console.log(`Seeding Admin User: ${adminEmail}`)
     await prisma.user.upsert({
         where: { email: adminEmail },
@@ -120,14 +120,16 @@ async function main() {
 
     // 3. Seed Employees (Cleanup existing if any, then recreate)
     console.log('Processing employee data...')
-    const employeeUsers = await prisma.user.findMany({
-        where: { role: 'EMPLOYEE' },
+    const allOtherUsers = await prisma.user.findMany({
+        where: {
+            NOT: { email: adminEmail }
+        },
         select: { id: true }
     })
 
-    if (employeeUsers.length > 0) {
-        console.log(`Cleaning up ${employeeUsers.length} existing employees and their related data...`)
-        const userIds = employeeUsers.map(u => u.id)
+    if (allOtherUsers.length > 0) {
+        console.log(`Cleaning up ${allOtherUsers.length} existing users and their related data...`)
+        const userIds = allOtherUsers.map(u => u.id)
 
         // Batch delete related records
         await prisma.leaveRequest.deleteMany({ where: { userId: { in: userIds } } })

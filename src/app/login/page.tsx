@@ -15,7 +15,7 @@ export default function LoginPage() {
                     <div className="mt-6 space-y-2 rounded-lg bg-blue-50 p-4 text-sm">
                         <p className="font-semibold text-blue-900">Test Accounts:</p>
                         <div className="space-y-1 text-blue-700">
-                            <p>👨‍💼 Admin: <span className="font-mono">admin@company.com</span></p>
+                            <p>👨‍💼 Admin: <span className="font-mono">ai@socialengagementgroup.com</span></p>
                             <p>👤 Employee (example): <span className="font-mono">tawhid@socialengagementgroup.com</span></p>
                         </div>
                         <p className="mt-2 text-xs text-blue-600 italic border-t border-blue-100 pt-2">
