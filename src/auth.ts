@@ -67,17 +67,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                     console.log(`[Auth] Creating new user for: ${email}`)
                 }
 
-                // 4. Admin Auto-Update Logic
-                const adminEmails = process.env.ADMIN_EMAILS?.split(",").map(e => e.trim()) || [];
-                const isAdminEmail = email && adminEmails.includes(email);
-
+                // 4. User Creation
                 if (!existingUser) {
                     await prisma.user.create({
                         data: {
                             email,
                             name: user.name,
                             image: user.image,
-                            role: isAdminEmail ? "ADMIN" : "EMPLOYEE",
+                            // role defaults to EMPLOYEE in schema
                         }
                     })
                 }
