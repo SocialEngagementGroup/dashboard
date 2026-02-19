@@ -6,9 +6,9 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import { Building2, CreditCard, Check, Plus } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { cn } from "@/lib/utils"
 
 type Employee = {
     id: string
@@ -119,65 +119,59 @@ export function PaymentRow({ employee, lastPayment, lastSalaryPayment, lastBonus
     }
 
     return (
-        <TableRow className={isPaid ? "bg-green-50 dark:bg-green-950/20" : ""}>
+        <TableRow className={cn("transition-colors", isPaid ? "bg-green-50/50 dark:bg-green-950/20" : "")}>
             <TableCell>
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                     <Link
                         href={`/admin/employees/${employee.id}/view`}
-                        className="font-medium hover:underline text-primary block"
+                        className="font-bold text-sm tracking-tight hover:underline text-[#3d2222] dark:text-indigo-400 block"
                     >
                         {employee.name || 'N/A'}
                     </Link>
                     {employee.designation && (
-                        <div className="text-xs text-muted-foreground">{employee.designation}</div>
+                        <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-tight">{employee.designation}</div>
                     )}
                 </div>
             </TableCell>
 
             <TableCell>
                 <div className="flex items-center gap-2">
-                    <div className={`h-2.5 w-2.5 rounded-full ${isPaidForSelectedMonth() || isPaid ? 'bg-green-500' : 'bg-orange-500'}`} />
-                    <span className={`text-sm font-medium ${isPaidForSelectedMonth() || isPaid ? 'text-green-700 dark:text-green-400' : 'text-orange-700 dark:text-orange-400'}`}>
-                        {isPaidForSelectedMonth() || isPaid ? 'Paid this month' : 'Pending payment'}
+                    <div className={`h-2 w-2 rounded-full ${isPaidForSelectedMonth() || isPaid ? 'bg-emerald-500 shadow-[0_0_8px_#10b981]' : 'bg-orange-500 shadow-[0_0_8px_#f59e0b]'}`} />
+                    <span className={`text-[11px] font-bold uppercase tracking-wider ${isPaidForSelectedMonth() || isPaid ? 'text-emerald-700 dark:text-emerald-400' : 'text-orange-700 dark:text-orange-400'}`}>
+                        {isPaidForSelectedMonth() || isPaid ? 'Paid' : 'Pending'}
                     </span>
                 </div>
             </TableCell>
 
             <TableCell>
-                <div className="space-y-1.5 text-sm">
-                    <div className="flex items-start gap-2">
-                        <Building2 className="h-3.5 w-3.5 text-muted-foreground mt-0.5 flex-shrink-0" />
-                        <div className="flex-1">
-                            <span className="text-muted-foreground">Bank Name: </span>
-                            <span className="font-medium">{employee.bankName || 'Not set'}</span>
-                        </div>
+                <div className="space-y-1 text-xs">
+                    <div className="flex items-center gap-2">
+                        <Building2 className="h-3 w-3 text-slate-400" />
+                        <span className="font-semibold text-slate-700 dark:text-slate-200">{employee.bankName || 'Not set'}</span>
                     </div>
 
-                    <div className="flex items-start gap-2">
-                        <CreditCard className="h-3.5 w-3.5 text-muted-foreground mt-0.5 flex-shrink-0" />
-                        <div className="flex-1">
-                            <span className="text-muted-foreground">Account Number: </span>
-                            <span className="font-medium font-mono">{employee.accountNumber || 'Not set'}</span>
-                        </div>
+                    <div className="flex items-center gap-2">
+                        <CreditCard className="h-3 w-3 text-slate-400" />
+                        <span className="font-mono text-slate-600 dark:text-slate-300">{employee.accountNumber || 'Not set'}</span>
                     </div>
                 </div>
             </TableCell>
 
             <TableCell>
                 {displayedLastPayment ? (
-                    <div className="text-sm space-y-1">
-                        <div className="font-medium">{displayedLastPayment.type}</div>
-                        <div className="text-xs text-muted-foreground">{displayedLastPayment.amount} {displayedLastPayment.currency}</div>
-                        <div className="text-xs text-muted-foreground">{displayedLastPayment.month}</div>
+                    <div className="text-[11px] space-y-0.5">
+                        <div className="font-bold text-slate-700 dark:text-slate-200">{displayedLastPayment.type}</div>
+                        <div className="font-medium text-[#5c3333] dark:text-indigo-400">{displayedLastPayment.amount} {displayedLastPayment.currency}</div>
+                        <div className="text-slate-500">{displayedLastPayment.month}</div>
                     </div>
                 ) : (
-                    <span className="text-sm text-muted-foreground">No {paymentType.toLowerCase()} yet</span>
+                    <span className="text-[11px] font-medium text-slate-400 italic">No {paymentType.toLowerCase()} yet</span>
                 )}
             </TableCell>
 
             <TableCell>
                 <Select value={paymentType} onValueChange={setPaymentType} disabled={isPaid}>
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger className="w-full h-8 text-xs font-medium">
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -194,8 +188,8 @@ export function PaymentRow({ employee, lastPayment, lastSalaryPayment, lastBonus
                             type="text"
                             value={remarks}
                             onChange={(e) => setRemarks(e.target.value)}
-                            placeholder="Remarks (e.g. Eid Bonus)"
-                            className="w-full"
+                            placeholder="Remarks"
+                            className="w-full h-8 text-xs"
                             list={`remarks-list-${employee.id}`}
                             disabled={isPaid}
                         />
@@ -207,10 +201,10 @@ export function PaymentRow({ employee, lastPayment, lastSalaryPayment, lastBonus
                     </div>
                 ) : (
                     <Select value={selectedMonth} onValueChange={setSelectedMonth} disabled={isPaid}>
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger className="w-full h-8 text-xs font-medium">
                             <SelectValue />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="max-h-[300px]">
                             {monthOptions.map((option) => (
                                 <SelectItem key={option.value} value={option.value}>
                                     {option.label}
@@ -223,7 +217,7 @@ export function PaymentRow({ employee, lastPayment, lastSalaryPayment, lastBonus
 
             <TableCell>
                 <Select value={currency} onValueChange={setCurrency} disabled={isPaid}>
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger className="w-full h-8 text-xs font-medium">
                         <SelectValue placeholder="Currency" />
                     </SelectTrigger>
                     <SelectContent>
@@ -234,16 +228,21 @@ export function PaymentRow({ employee, lastPayment, lastSalaryPayment, lastBonus
             </TableCell>
 
             <TableCell>
-                <Input
-                    type="number"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    placeholder="Amount"
-                    className="w-full"
-                    min="0"
-                    step="0.01"
-                    disabled={isPaid}
-                />
+                <div className="relative">
+                    <Input
+                        type="number"
+                        value={amount}
+                        onChange={(e) => setAmount(e.target.value)}
+                        placeholder="Amount"
+                        className="w-full h-8 text-xs font-bold pr-8"
+                        min="0"
+                        step="0.01"
+                        disabled={isPaid}
+                    />
+                    <div className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400">
+                        {currency}
+                    </div>
+                </div>
             </TableCell>
 
             <TableCell className="text-right">
@@ -251,19 +250,23 @@ export function PaymentRow({ employee, lastPayment, lastSalaryPayment, lastBonus
                     size="sm"
                     onClick={handleProcessPayment}
                     disabled={isProcessing || isPaid || !amount}
-                    className="w-full"
-                    variant={isPaid ? "outline" : "default"}
+                    className={cn(
+                        "h-8 px-4 text-xs font-bold transition-all duration-300",
+                        isPaid
+                            ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-none shadow-none"
+                            : "bg-[#5c3333] hover:bg-[#3d2222] shadow-sm hover:shadow-md"
+                    )}
                 >
                     {isPaid ? (
                         <>
-                            <Check className="h-3 w-3 mr-1" />
+                            <Check className="h-3.5 w-3.5 mr-1.5" />
                             Added
                         </>
                     ) : isProcessing ? (
                         "Adding..."
                     ) : (
                         <>
-                            <Plus className="h-3 w-3 mr-1" />
+                            <Plus className="h-3.5 w-3.5 mr-1.5" />
                             Add
                         </>
                     )}

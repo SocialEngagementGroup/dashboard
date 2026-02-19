@@ -90,24 +90,26 @@ export function EmployeeSidebar() {
     }
 
     return (
-        <div className="flex h-full w-64 flex-col border-r" style={{ backgroundColor: '#5c3333ff' }}>
-            <div className="flex h-14 items-center border-b border-white/20 px-6">
-                <Link className="flex items-center gap-2 font-semibold text-white" href="/dashboard">
-                    <Image
-                        src="/uploads/SEG-Favicon-White.png"
-                        alt="SEG Logo"
-                        width={32}
-                        height={32}
-                        className="object-contain"
-                    />
-                    <span className="">SEG Dashboard</span>
+        <div className="flex h-full w-64 flex-col border-r bg-[var(--sidebar-bg)] overflow-hidden">
+            <div className="flex h-16 items-center px-6 bg-[var(--brand-gradient)] shadow-md">
+                <Link className="flex items-center gap-2 font-bold text-white tracking-tight" href="/dashboard">
+                    <div className="bg-white/10 p-1.5 rounded-lg backdrop-blur-sm border border-white/20">
+                        <Image
+                            src="/uploads/SEG-Favicon-White.png"
+                            alt="SEG Logo"
+                            width={24}
+                            height={24}
+                            className="object-contain"
+                        />
+                    </div>
+                    <span className="text-lg">SEG Dashboard</span>
                 </Link>
             </div>
-            <div className="flex-1 overflow-auto py-4">
-                <nav className="grid items-start px-4 text-base font-medium gap-6">
+            <div className="flex-1 overflow-auto py-6">
+                <nav className="grid items-start px-4 text-sm font-medium gap-8">
                     {sidebarGroups.map((group, index) => (
-                        <div key={index} className="space-y-2">
-                            <h3 className="px-3 text-xs font-semibold text-white/50 uppercase tracking-wider">
+                        <div key={index} className="space-y-3">
+                            <h3 className="px-4 text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">
                                 {group.label}
                             </h3>
                             <div className="space-y-1">
@@ -116,14 +118,17 @@ export function EmployeeSidebar() {
                                         key={item.href}
                                         href={item.href}
                                         className={cn(
-                                            "flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ease-in-out hover:text-white hover:bg-white/15",
+                                            "flex items-center gap-3 rounded-xl px-4 py-2.5 transition-all duration-300 ease-out group",
                                             pathname === item.href
-                                                ? "bg-white/20 text-white shadow-sm"
-                                                : "text-white/70"
+                                                ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
+                                                : "text-slate-400 hover:text-white hover:bg-white/5"
                                         )}
                                     >
-                                        <item.icon className="h-5 w-5" />
-                                        {item.title}
+                                        <item.icon className={cn(
+                                            "h-5 w-5 transition-transform duration-300 group-hover:scale-110",
+                                            pathname === item.href ? "text-white" : "text-slate-500 group-hover:text-indigo-400"
+                                        )} />
+                                        <span>{item.title}</span>
                                     </Link>
                                 ))}
                             </div>
@@ -131,25 +136,28 @@ export function EmployeeSidebar() {
                     ))}
                 </nav>
             </div>
-            <div className="mt-auto p-4">
-                <div className="flex items-center gap-2">
+            <div className="mt-auto p-4 border-t border-white/5 bg-black/10">
+                <div className="flex items-center gap-1">
                     <Link
                         href="/dashboard/profile"
                         className={cn(
-                            "flex-1 flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ease-in-out hover:text-white hover:bg-white/15",
+                            "flex-1 flex items-center gap-3 rounded-xl px-4 py-2.5 transition-all duration-300 group",
                             pathname === "/dashboard/profile"
-                                ? "bg-white/20 text-white shadow-sm"
-                                : "text-white/70"
+                                ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
+                                : "text-slate-400 hover:text-white hover:bg-white/5"
                         )}
                     >
-                        <User className="h-5 w-5" />
-                        <span className="text-base font-medium">My Profile</span>
+                        <User className={cn(
+                            "h-5 w-5 transition-transform duration-300 group-hover:rotate-12",
+                            pathname === "/dashboard/profile" ? "text-white" : "text-slate-500 group-hover:text-indigo-400"
+                        )} />
+                        <span className="text-sm font-medium">Profile</span>
                     </Link>
                     <Button
                         onClick={handleSignOut}
                         variant="ghost"
                         size="icon"
-                        className="text-white/70 hover:text-white hover:bg-white/15 rounded-lg shrink-0"
+                        className="text-slate-400 hover:text-rose-400 hover:bg-rose-400/10 rounded-xl shrink-0 transition-colors"
                     >
                         <LogOut className="h-5 w-5" />
                         <span className="sr-only">Sign Out</span>

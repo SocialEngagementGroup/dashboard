@@ -3,6 +3,7 @@ import Google from "next-auth/providers/google"
 import Credentials from "next-auth/providers/credentials"
 import { prisma } from "@/lib/prisma"
 import { authConfig } from "./auth.config"
+import bcrypt from "bcryptjs"
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
     ...authConfig,
@@ -15,22 +16,30 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         Credentials({
             credentials: {
                 email: { label: "Email", type: "email" },
+                password: { label: "Password", type: "password" },
             },
             async authorize(credentials) {
-                if (!credentials?.email) return null
+                if (!credentials?.email || !credentials?.password) return null
 
-                console.log(`[Auth] Credentials email received: ${credentials.email}`)
+                console.log(`[Auth] Credentials login attempt for: ${credentials.email}`)
 
                 const user = await prisma.user.findUnique({
                     where: { email: credentials.email as string }
                 })
 
-                if (!user) {
-                    console.log(`[Auth] User found: false`)
+                if (!user || !user.password) {
+                    console.log(`[Auth] User not found or no password set for: ${credentials.email}`)
                     return null
                 }
 
-                console.log(`[Auth] User found: true, Role: ${user.role}`)
+                const isPasswordValid = bcrypt.compareSync(credentials.password as string, user.password)
+
+                if (!isPasswordValid) {
+                    console.log(`[Auth] Invalid password for: ${credentials.email}`)
+                    return null
+                }
+
+                console.log(`[Auth] Success: ${user.email} logged in, Role: ${user.role}`)
 
                 return {
                     id: user.id,
@@ -58,27 +67,17 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                     return false
                 }
 
-                // 3. User Existence & Auto-Creation
+                // 3. User Existence Check (Restricted Access)
                 const existingUser = await prisma.user.findUnique({
                     where: { email },
                 })
 
                 if (!existingUser) {
-                    console.log(`[Auth] Creating new user for: ${email}`)
+                    console.log(`[Auth] Unauthorized: ${email} not found in database. Blocking signup.`)
+                    return false // Reject login/signup for new users
                 }
 
-                // 4. User Creation
-                if (!existingUser) {
-                    await prisma.user.create({
-                        data: {
-                            email,
-                            name: user.name,
-                            image: user.image,
-                            // role defaults to EMPLOYEE in schema
-                        }
-                    })
-                }
-
+                console.log(`[Auth] Authorized: ${email} found in database.`)
                 return true
             }
             return true

@@ -1,17 +1,31 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { signIn } from "next-auth/react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { toast } from "sonner"
 
 export function LoginForm() {
     const router = useRouter()
+    const searchParams = useSearchParams()
     const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
     const [loadingProvider, setLoadingProvider] = useState<"credentials" | "google" | null>(null)
     const [error, setError] = useState("")
+
+    useEffect(() => {
+        const authError = searchParams.get("error")
+        if (authError) {
+            toast.error("Account Access Restricted", {
+                description: "Sorry, your account was not found in our system. Please contact the Admin to create your account.",
+                duration: 5000,
+            })
+            setError("Access denied. Please contact the Admin to create your account.")
+        }
+    }, [searchParams])
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
@@ -21,12 +35,21 @@ export function LoginForm() {
         try {
             const result = await signIn("credentials", {
                 email,
+                password,
                 redirect: false,
             })
 
             if (result?.error) {
-                setError("Invalid email. Please check your email and try again.")
+                // Check if it's a "User not found" scenario (Credentials provider returns null on any failure, but we can treat it as unauthorized)
                 setLoadingProvider(null)
+
+                // The requirements specifically asked for this popup message if unauthorized
+                toast.error("Account Access Restricted", {
+                    description: "Sorry, your account was not found in our system. Please contact the Admin to create your account.",
+                    duration: 5000,
+                })
+
+                setError("Invalid credentials. Please contact the Admin if you believe this is an error.")
                 return
             }
 
@@ -47,6 +70,13 @@ export function LoginForm() {
         }
     }
 
+    const handleGoogleLogin = () => {
+        setLoadingProvider("google")
+        signIn("google", {
+            callbackUrl: "/auth-callback",
+        })
+    }
+
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
@@ -57,6 +87,19 @@ export function LoginForm() {
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    required
+                    disabled={loadingProvider !== null}
+                />
+            </div>
+
+            <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                    id="password"
+                    type="password"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     required
                     disabled={loadingProvider !== null}
                 />
@@ -87,10 +130,7 @@ export function LoginForm() {
                 type="button"
                 variant="outline"
                 className="w-full"
-                onClick={() => {
-                    setLoadingProvider("google")
-                    signIn("google", { callbackUrl: "/auth-callback" })
-                }}
+                onClick={handleGoogleLogin}
                 disabled={loadingProvider !== null}
             >
                 {loadingProvider === "google" ? (

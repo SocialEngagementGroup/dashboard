@@ -156,9 +156,9 @@ export default async function PaymentPage() {
         .filter((item: any, index: any, array: any) => array.indexOf(item) === index)
 
     return (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 fade-in">
             <div>
-                <h1 className="text-3xl font-bold">Payment Management</h1>
+                <h1 className="text-3xl font-bold brand-text-gradient">Payment Management</h1>
             </div>
 
             <div className="rounded-md border bg-white dark:bg-gray-900">

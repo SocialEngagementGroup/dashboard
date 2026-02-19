@@ -121,7 +121,7 @@ export function ProfileEditForm({ user }: { user: any }) {
                             <TabsTrigger value="emergency">Emergency</TabsTrigger>
                         </TabsList>
 
-                        <TabsContent value="personal" className="space-y-4 py-4">
+                        <TabsContent value="personal" className="space-y-4 py-4" forceMount>
                             <div className="space-y-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="name">Full Name</Label>
@@ -191,7 +191,7 @@ export function ProfileEditForm({ user }: { user: any }) {
                             </div>
                         </TabsContent>
 
-                        <TabsContent value="contact" className="space-y-4 py-4">
+                        <TabsContent value="contact" className="space-y-4 py-4" forceMount>
                             <div className="space-y-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="phone">Phone Number</Label>
@@ -212,7 +212,7 @@ export function ProfileEditForm({ user }: { user: any }) {
                             </div>
                         </TabsContent>
 
-                        <TabsContent value="emergency" className="space-y-4 py-4">
+                        <TabsContent value="emergency" className="space-y-4 py-4" forceMount>
                             <div className="space-y-4">
                                 {contacts.map((contact, index) => (
                                     <div key={index} className="p-4 border rounded-lg space-y-4 relative bg-gray-50 dark:bg-gray-900/50">

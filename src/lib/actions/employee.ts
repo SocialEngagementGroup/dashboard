@@ -6,10 +6,12 @@ import { redirect } from "next/navigation"
 import { writeFile } from "fs/promises"
 import { join } from "path"
 import { z } from "zod"
+import bcrypt from "bcryptjs"
 
 const EmployeeSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
     email: z.string().email("Invalid email address"),
+    password: z.string().min(6, "Password must be at least 6 characters").optional().or(z.literal("")),
     role: z.enum(["ADMIN", "EMPLOYEE"]),
     managerId: z.string().optional(),
     designation: z.string().min(1, "Designation is required"),
@@ -43,6 +45,7 @@ export async function createEmployee(prevState: EmployeeFormState, formData: For
     const validatedFields = EmployeeSchema.safeParse({
         name: formData.get("name"),
         email: formData.get("email"),
+        password: formData.get("password"),
         role: formData.get("role"),
         managerId: (formData.get("managerId") === "none" ? undefined : formData.get("managerId")) || undefined,
         designation: formData.get("designation"),
@@ -73,7 +76,7 @@ export async function createEmployee(prevState: EmployeeFormState, formData: For
         }
     }
 
-    const { email } = validatedFields.data
+    const { email, password } = validatedFields.data
 
     const existingUser = await prisma.user.findUnique({
         where: { email },
@@ -102,16 +105,21 @@ export async function createEmployee(prevState: EmployeeFormState, formData: For
         }
     }
 
+    // Hash the password if provided
+    const hashedPassword = password ? bcrypt.hashSync(password, 10) : undefined
+
     try {
         await prisma.user.create({
             data: {
                 ...validatedFields.data,
+                password: hashedPassword,
                 image: imageUrl,
                 dob: validatedFields.data.dob ? new Date(validatedFields.data.dob) : null,
                 joiningDate: validatedFields.data.joiningDate ? new Date(validatedFields.data.joiningDate) : null,
             },
         })
     } catch (error) {
+        console.error("[CreateEmployee] Database Error:", error)
         return {
             message: "Database Error: Failed to Create Employee.",
         }
@@ -125,6 +133,7 @@ export async function updateEmployee(id: string, prevState: EmployeeFormState, f
     const validatedFields = EmployeeSchema.safeParse({
         name: formData.get("name"),
         email: formData.get("email"),
+        password: formData.get("password"),
         role: formData.get("role"),
         managerId: (formData.get("managerId") === "none" ? undefined : formData.get("managerId")) || undefined,
         designation: formData.get("designation"),
@@ -172,17 +181,24 @@ export async function updateEmployee(id: string, prevState: EmployeeFormState, f
         }
     }
 
+    // Hash the password if provided
+    const hashedPassword = validatedFields.data.password
+        ? bcrypt.hashSync(validatedFields.data.password, 10)
+        : undefined
+
     try {
         await prisma.user.update({
             where: { id },
             data: {
                 ...validatedFields.data,
+                ...(hashedPassword ? { password: hashedPassword } : {}),
                 ...(imageUrl ? { image: imageUrl } : {}),
                 dob: validatedFields.data.dob ? new Date(validatedFields.data.dob) : null,
                 joiningDate: validatedFields.data.joiningDate ? new Date(validatedFields.data.joiningDate) : null,
             },
         })
     } catch (error) {
+        console.error("[UpdateEmployee] Database Error:", error)
         return {
             message: "Database Error: Failed to Update Employee.",
         }
