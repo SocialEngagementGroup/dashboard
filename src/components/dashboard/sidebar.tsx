@@ -15,7 +15,7 @@ import {
     BookOpen,
     Wrench,
     LogOut,
-    FileText
+    FileText,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -23,63 +23,31 @@ const sidebarGroups = [
     {
         label: "Main",
         items: [
-            {
-                title: "Home",
-                href: "/dashboard",
-                icon: LayoutDashboard,
-            },
-        ]
+            { title: "Home", href: "/dashboard", icon: LayoutDashboard },
+        ],
     },
     {
         label: "My Work",
         items: [
-            {
-                title: "Leave",
-                href: "/dashboard/leave",
-                icon: Calendar,
-            },
-            {
-                title: "Tools",
-                href: "/dashboard/tools",
-                icon: Wrench,
-            },
-            {
-                title: "Documents",
-                href: "/dashboard/documents",
-                icon: FileText,
-            },
-        ]
+            { title: "Leave", href: "/dashboard/leave", icon: Calendar },
+            { title: "Tools", href: "/dashboard/tools", icon: Wrench },
+            { title: "Documents", href: "/dashboard/documents", icon: FileText },
+        ],
     },
     {
         label: "Organization",
         items: [
-            {
-                title: "Teams",
-                href: "/dashboard/teams",
-                icon: Users,
-            },
-            {
-                title: "Resources",
-                href: "/dashboard/resources",
-                icon: BookOpen,
-            },
-        ]
+            { title: "Teams", href: "/dashboard/teams", icon: Users },
+            { title: "Resources", href: "/dashboard/resources", icon: BookOpen },
+        ],
     },
     {
         label: "Personal",
         items: [
-            {
-                title: "Salary",
-                href: "/dashboard/salary",
-                icon: CircleDollarSign,
-            },
-            {
-                title: "Performance",
-                href: "/dashboard/performance",
-                icon: TrendingUp,
-            },
-        ]
-    }
+            { title: "Salary", href: "/dashboard/salary", icon: CircleDollarSign },
+            { title: "Performance", href: "/dashboard/performance", icon: TrendingUp },
+        ],
+    },
 ]
 
 export function EmployeeSidebar() {
@@ -105,6 +73,7 @@ export function EmployeeSidebar() {
                     <span className="text-lg">SEG Dashboard</span>
                 </Link>
             </div>
+
             <div className="flex-1 overflow-auto py-6">
                 <nav className="grid items-start px-4 text-sm font-medium gap-8">
                     {sidebarGroups.map((group, index) => (
@@ -112,23 +81,21 @@ export function EmployeeSidebar() {
                             <h3 className="px-4 text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">
                                 {group.label}
                             </h3>
+
                             <div className="space-y-1">
                                 {group.items.map((item) => (
                                     <Link
                                         key={item.href}
                                         href={item.href}
                                         className={cn(
-                                            "flex items-center gap-3 rounded-xl px-4 py-2.5 transition-all duration-300 ease-out group",
+                                            "flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ease-in-out hover:text-white hover:bg-white/15",
                                             pathname === item.href
-                                                ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
-                                                : "text-slate-400 hover:text-white hover:bg-white/5"
+                                                ? "bg-white/20 text-white shadow-sm"
+                                                : "text-white/70"
                                         )}
                                     >
-                                        <item.icon className={cn(
-                                            "h-5 w-5 transition-transform duration-300 group-hover:scale-110",
-                                            pathname === item.href ? "text-white" : "text-slate-500 group-hover:text-indigo-400"
-                                        )} />
-                                        <span>{item.title}</span>
+                                        <item.icon className="h-5 w-5" />
+                                        {item.title}
                                     </Link>
                                 ))}
                             </div>
@@ -136,28 +103,27 @@ export function EmployeeSidebar() {
                     ))}
                 </nav>
             </div>
+
             <div className="mt-auto p-4 border-t border-white/5 bg-black/10">
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-2">
                     <Link
                         href="/dashboard/profile"
                         className={cn(
-                            "flex-1 flex items-center gap-3 rounded-xl px-4 py-2.5 transition-all duration-300 group",
+                            "flex-1 flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-200 ease-in-out hover:text-white hover:bg-white/15",
                             pathname === "/dashboard/profile"
-                                ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
-                                : "text-slate-400 hover:text-white hover:bg-white/5"
+                                ? "bg-white/20 text-white shadow-sm"
+                                : "text-white/70"
                         )}
                     >
-                        <User className={cn(
-                            "h-5 w-5 transition-transform duration-300 group-hover:rotate-12",
-                            pathname === "/dashboard/profile" ? "text-white" : "text-slate-500 group-hover:text-indigo-400"
-                        )} />
-                        <span className="text-sm font-medium">Profile</span>
+                        <User className="h-5 w-5" />
+                        <span className="text-base font-medium">My Profile</span>
                     </Link>
+
                     <Button
                         onClick={handleSignOut}
                         variant="ghost"
                         size="icon"
-                        className="text-slate-400 hover:text-rose-400 hover:bg-rose-400/10 rounded-xl shrink-0 transition-colors"
+                        className="text-white/70 hover:text-white hover:bg-white/15 rounded-lg shrink-0"
                     >
                         <LogOut className="h-5 w-5" />
                         <span className="sr-only">Sign Out</span>
