@@ -54,6 +54,7 @@ export async function applyForLeave(prevState: LeaveFormState, formData: FormDat
             },
         })
     } catch (error) {
+        console.error("Apply Leave Error:", error)
         return {
             message: "Database Error: Failed to Apply for Leave.",
         }

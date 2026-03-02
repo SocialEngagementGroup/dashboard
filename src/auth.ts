@@ -91,13 +91,17 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                 if ((user as any).role) {
                     token.role = (user as any).role;
                 }
-                // 2. Fetch from DB for Google/other providers or if role is missing
-                else if (email) {
+
+                // 2. Always fetch from DB to ensure we have the correct CUID and role
+                if (email) {
                     const dbUser = await prisma.user.findUnique({
                         where: { email },
-                        select: { role: true }
+                        select: { id: true, role: true }
                     });
-                    if (dbUser) token.role = dbUser.role;
+                    if (dbUser) {
+                        token.sub = dbUser.id;
+                        token.role = dbUser.role;
+                    }
                 }
             }
             return token;
