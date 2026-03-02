@@ -45,7 +45,7 @@ export async function createEmployee(prevState: EmployeeFormState, formData: For
     const validatedFields = EmployeeSchema.safeParse({
         name: formData.get("name"),
         email: formData.get("email"),
-        password: formData.get("password"),
+        password: formData.get("password") || undefined,
         role: formData.get("role"),
         managerId: (formData.get("managerId") === "none" ? undefined : formData.get("managerId")) || undefined,
         designation: formData.get("designation"),
@@ -106,7 +106,7 @@ export async function createEmployee(prevState: EmployeeFormState, formData: For
     }
 
     // Hash the password if provided
-    const hashedPassword = password ? bcrypt.hashSync(password, 10) : undefined
+    const hashedPassword = password ? bcrypt.hashSync(password, 10) : null
 
     try {
         await prisma.user.create({

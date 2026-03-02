@@ -127,23 +127,23 @@ export function EmployeeForm({ employee, managers, departments, onSuccess }: Emp
                                     </SelectContent>
                                 </Select>
                             </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="password">
-                                    {employee ? "New Password (Leave blank to keep current)" : "Login Password"}
-                                    {!employee && <span className="text-red-500"> *</span>}
-                                </Label>
-                                <Input
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    placeholder="••••••••"
-                                    required={!employee}
-                                    minLength={6}
-                                />
-                                {state?.errors?.password && (
-                                    <p className="text-sm text-red-500">{state.errors.password[0]}</p>
-                                )}
-                            </div>
+                            {employee && (
+                                <div className="space-y-2">
+                                    <Label htmlFor="password">
+                                        New Password (Leave blank to keep current)
+                                    </Label>
+                                    <Input
+                                        id="password"
+                                        name="password"
+                                        type="password"
+                                        placeholder="••••••••"
+                                        minLength={6}
+                                    />
+                                    {state?.errors?.password && (
+                                        <p className="text-sm text-red-500">{state.errors.password[0]}</p>
+                                    )}
+                                </div>
+                            )}
                         </div>
 
                         <div className="space-y-2">
